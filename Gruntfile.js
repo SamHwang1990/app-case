@@ -7,17 +7,17 @@ module.exports = function(grunt){
             }
         },
         jshint: {
-            files: ['Gruntfile.js','app.js','**/*.js'],
-            ignore:['node_modules/'],
             options: {
                 globals: {
                     exports: true
-                }
-            }
+                },
+                ignore:['node_modules/'],
+            },
+            files: ['Gruntfile.js','app.js','*/*.js']
         },
         watch: {
             files: ['<%= jshint.files %>'],
-            tasks: ['connect','jshint', 'karma'],
+            tasks: ['jshint', 'karma'],
             options: {
                 spawn: false,
                 livereload: true
