@@ -7,7 +7,7 @@ module.exports = function(grunt){
             }
         },
         jshint: {
-            files: ['Gruntfile.js', '**/*.js'],
+            files: ['Gruntfile.js','app.js','**/*.js'],
             ignore:['node_modules/'],
             options: {
                 globals: {
@@ -16,8 +16,8 @@ module.exports = function(grunt){
             }
         },
         watch: {
-            files: jshint.files,
-            tasks: ['jshint', 'karma'],
+            files: ['<%= jshint.files %>'],
+            tasks: ['connect','jshint', 'karma'],
             options: {
                 spawn: false,
                 livereload: true
@@ -26,24 +26,22 @@ module.exports = function(grunt){
         connect: {
             server: {
                 options: {
-                    port: 3000,
-                    open:{
-                        target: 'http://localhost:3000', // target url to open
-                        appName: 'open', // name of the app that opens, ie: open, start, xdg-open
-                        callback: function() {} // called when the app has opened
-                    },
+                    hostname:"localhost",
                     middleware: function (connect) {
                         return [
                             require('./app') // your server packaged as a nodejs module
                         ];
                     }
+                },
+                keepAlive:{
+                    keepalive:true
                 }
             }
         }
-    })
+    });
 
     require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
 
     // Default task(s).
-    grunt.registerTask('default', ['connect','jshint']);
-}
+    grunt.registerTask('default', ['connect:server:keepAlive','jshint']);
+};
