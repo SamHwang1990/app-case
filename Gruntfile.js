@@ -35,6 +35,16 @@ module.exports = function(grunt){
                     keepalive:true
                 }
             }
+        },
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec',
+                    timeout:5000,
+                    require:"should"
+                },
+                src: ['test/**/*.js']
+            }
         }
     });
 
