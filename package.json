@@ -22,6 +22,7 @@
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "response-time": "^2.0.1",
+    "stylus": "^0.48.1",
     "utility": "^1.2.0",
     "validator": "^3.18.1"
   },
@@ -31,6 +32,7 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-karma": "^0.8.3",
-    "matchdep": "^0.3.0"
+    "matchdep": "^0.3.0",
+    "supertest": "^0.13.0"
   }
 }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- meta -->
+    <meta charset="utf-8"/>
+    <meta name='description' content='<%= config.description %>'>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <%
+    var headers = config.site_headers || [];
+    for (var i = 0, l = headers.length; i < l; i++) {
+    %>
+    <%- headers[i] %>
+    <% } %>
+
+    <% if (config.site_icon) { %>
+    <link rel="icon" href="<%- config.site_icon %>" type="image/x-icon"/>
+    <% } %>
+
+    <% if (typeof(topic) !== 'undefined') { %>
+    <title><%= topic.title %> - <%= config.name %></title>
+    <% } else { %>
+    <title><%= config.description %></title>
+    <% } %>
+    <meta content="_csrf" name="csrf-param">
+    <meta content="<%= csrf %>" name="csrf-token">
+</head>
+<body>
+
+<div id='main'>
+    <%- body %>
+</div>
+</body>
+</html>

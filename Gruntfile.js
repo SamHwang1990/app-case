@@ -31,9 +31,7 @@ module.exports = function(grunt){
                         return [
                             require('./app') // your server packaged as a nodejs module
                         ];
-                    }
-                },
-                keepAlive:{
+                    },
                     keepalive:true
                 }
             }
@@ -43,5 +41,5 @@ module.exports = function(grunt){
     require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
 
     // Default task(s).
-    grunt.registerTask('default', ['connect:server:keepAlive','jshint']);
+    grunt.registerTask('default', ['jshint','connect:server:keepAlive']);
 };

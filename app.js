@@ -15,7 +15,7 @@ var config = require('./config').config;
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 //require('./models');
-//var routes = require('./routes');
+var routes = require('./routes');
 //var auth = require('./middlewares/auth');
 var MongoStore = require('connect-mongo')(session);
 var _ = require('lodash');
@@ -101,7 +101,7 @@ passport.deserializeUser(function (user, done) {
 app.use(busboy());
 
 // routes
-//routes(app);
+routes(app);
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -111,7 +111,7 @@ app.use(function (err, req, res, next) {
 app.listen(config.port, function () {
     console.log("AppCase listening on port %d in %s mode", config.port, app.settings.env);
     console.log("God bless love....");
-    console.log("You can debug your app with http://" + config.hostname + ':' + config.port);
+    console.log("You can debug your app with http://" + config.host + ':' + config.port);
 });
 
 module.exports = app;
