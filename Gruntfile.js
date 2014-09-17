@@ -11,7 +11,7 @@ module.exports = function(grunt){
                 globals: {
                     exports: true
                 },
-                ignore:['node_modules/'],
+                ignore:['node_modules/']
             },
             files: ['Gruntfile.js','app.js','*/*.js']
         },
