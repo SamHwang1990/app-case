@@ -16,7 +16,7 @@ module.exports = function(grunt){
             files: ['Gruntfile.js','app.js','*/*.js']
         },
         watch: {
-            files: ['<%= jshint.files %>'],
+            files: ['<%= jshint.files %>','public/stylesheets/stylus/*.styl'],
             tasks: ['jshint', 'karma'],
             options: {
                 spawn: false,

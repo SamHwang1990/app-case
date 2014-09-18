@@ -23,6 +23,8 @@ var csurf = require('csurf');
 var compress = require('compression');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
+var stylus = require('stylus');
+var nib = require('nib');
 
 //静态文件目录
 var staticDir = path.join(__dirname, 'public');
@@ -69,7 +71,23 @@ app.use(passport.initialize());
 //app.use(require('./controllers/sign').auth_user);
 //app.use(auth.blockUser());
 
-app.use(Loader.stylus(__dirname));
+//app.use(Loader.stylus(__dirname));
+
+function compile(str, path) {
+    console.log("Compile stylus file");
+    return stylus(str)
+        .set('filename', path)
+        .set('compress', true)
+        .use(nib());
+}
+
+app.use(stylus.middleware({
+    src: __dirname + "/stylesheets",
+    dest: __dirname + "/public/stylesheets",
+    compile: compile
+}));
+
+
 app.use('/public',express.static(staticDir));
 
 if (!config.debug) {

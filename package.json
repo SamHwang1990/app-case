@@ -19,6 +19,7 @@
     "lodash": "^2.4.1",
     "method-override": "^2.2.0",
     "mongoose": "^3.8.16",
+    "nib": "^1.0.3",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "response-time": "^2.0.1",
