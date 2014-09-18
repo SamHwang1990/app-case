@@ -13,7 +13,9 @@ var UserSchema = new Schema({
     email:{type:String},
     url:{type:String},
     avatar:{type:String},
-    is_block:{type:Boolean, default:false}
+    is_block:{type:Boolean, default:false},
+    create_date:{type:Date},
+    last_login_date:{type:Date}
 });
 
 UserSchema.virtual('avatar_url').get(function(){

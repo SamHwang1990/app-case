@@ -19,7 +19,10 @@ var StudentSchema = new Schema({
 
     remark:{type:String},
 
-    is_block:{type:Boolean, default:false}
+    is_block:{type:Boolean, default:false},
+
+    create_date:{type:Date},
+    last_edit_date:{type:Date}
 });
 
 StudentSchema.index({name:1});

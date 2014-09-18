@@ -1,11 +1,11 @@
 {
-  "name": "AppCase",
+  "name": "AppCase Client-Side",
   "version": "0.0.1",
   "homepage": "https://github.com/SamHwang1990/app-case",
   "authors": [
     "SamHwang1990 <samhwang1990@gmail.com>"
   ],
-  "description": "app cases website, for sale",
+  "description": "app cases website, client-side",
   "moduleType": [
     "amd"
   ],
@@ -18,7 +18,8 @@
     "tests"
   ],
   "dependencies": {
+    "jquery": "~2.1.1",
     "bootstrap": "~3.2.0",
-    "jquery": "~2.1.1"
+    "headroom.js": "~0.7.0"
   }
 }
