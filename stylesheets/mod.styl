@@ -10,6 +10,36 @@ img
 	vertical-align middle
 	border 0
 
+.cell-row
+	cursor pointer
+	position relative
+	display table
+	width 100%
+	height 3em
+	padding-left 10px
+	background-color #f9f9f9
+	border 1px solid #fff
+	overflow ellipsis
+
+	&:hover
+		color #fff
+		background-color #f6725a
+
+	.cell-row-col
+		display table-cell
+		vertical-align middle
+		font-size 14px
+
+	.cell-row-right-arrow
+		absolute:top 50% right 8px
+		margin-top -10px
+		font-size 16px
+
+	.link-target
+		absolute:top 0 bottom 0 left 0 right 0
+
+
+
 /* Header Module */
 #ac_header
 	margin-bottom 0
@@ -78,6 +108,7 @@ img
 
 	.ac_sortItem
 		padding 50px 0
+		border-bottom 1px solid #eee
 
 		h3
 			font-weight 300;
@@ -92,5 +123,9 @@ img
 				margin-top 5px
 				color #536676
 				font-size 16px
+
+		&:nth-last-child(1)
+			border-bottom none
+
 
 /* ac_index Module End */
