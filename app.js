@@ -72,19 +72,16 @@ app.use(passport.initialize());
 //app.use(auth.blockUser());
 
 //app.use(Loader.stylus(__dirname));
-
-function compile(str, path) {
-    console.log("Compile stylus file");
-    return stylus(str)
-        .set('filename', path)
-        .set('compress', true)
-        .use(nib());
-}
-
 app.use(stylus.middleware({
-    src: __dirname + "/stylesheets",
-    dest: __dirname + "/public/stylesheets",
-    compile: compile
+    src: __dirname,
+    dest: __dirname + "/public",
+    compile: function(str,path){
+        console.log("Compile stylus file");
+        return stylus(str)
+            .set('filename', path)
+            .set('compress', true)
+            .use(nib());
+    }
 }));
 
 
