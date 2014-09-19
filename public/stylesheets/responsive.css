@@ -1,3 +1,1 @@
-/***********************************************
- * Created by samhwang1990@gmail.com on 14-9-18.
- ***********************************************/
+@media all and (min-width:768px){#ac_index_jumbotron{padding-top:60px;padding-bottom:60px;font-size:24px;text-align:left;}#ac_index_jumbotron h1{font-size:60px;line-height:1}#ac_index_jumbotron p{font-size:24px}}@media all and (min-width:992px){#ac_index_jumbotron h1,#ac_index_jumbotron p{margin-right:380px}#ac_index_content .ac_sortItem>.container{padding-left:30px;padding-right:30px}}
