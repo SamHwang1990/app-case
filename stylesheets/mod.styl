@@ -4,6 +4,9 @@
  ***********************************************/
 
 /* Common Component Module */
+body
+	background-color #f5f4f2
+
 img
 	height auto
 	max-width 100%
@@ -17,8 +20,8 @@ img
 	width 100%
 	height 3em
 	padding-left 10px
-	background-color #f9f9f9
-	border 1px solid #fff
+	background-color #fff
+	border-bottom  1px solid #eee
 	overflow ellipsis
 
 	&:hover
@@ -44,7 +47,6 @@ img
 #ac_header
 	margin-bottom 0
 	background-color #fff
-	border-bottom 0
 
 	.navbar-nav>li>a
 		font-weight 500
@@ -108,14 +110,14 @@ img
 
 	.ac_sortItem
 		padding 50px 0
-		border-bottom 1px solid #eee
+		/*border-bottom 3px solid #fff*/
 
 		h3
 			font-weight 300;
 			color #1874c1
 			font-size 36px
 			padding 0px 20px
-			border-right 1px solid #eeE
+			border-right 3px solid #fff
 			text-align left
 
 			span
@@ -125,7 +127,17 @@ img
 				font-size 16px
 
 		&:nth-last-child(1)
+			padding-bottom 0
 			border-bottom none
 
 
 /* ac_index Module End */
+
+/* ac_v_list Module Start */
+#ac_v_breadcrumb
+	margin 20px 0 15px 0
+
+	.breadcrumb_tip
+		margin 0
+
+/* ac_v_list Module End */

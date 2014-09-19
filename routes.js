@@ -9,4 +9,10 @@ var config = require('./config');
 module.exports = function(app){
     // home page
     app.get('/', site.index);
+
+    //student list page
+    app.get('/list',site.list);
+
+    //student resume page
+    app.get('/resume',site.resume);
 }

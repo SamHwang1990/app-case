@@ -18,4 +18,20 @@ describe('test/controllers/site.test.js', function () {
         });
     });
 
+    it('should /list 200',function(done){
+       request.get('/list').end(function(err,res){
+           res.status.should.eql(200);
+           res.text.should.containDeep('student list');
+           done(err);
+       });
+    });
+
+    it('should /resume 200',function(done){
+        request.get('/resume').end(function(err,res){
+            res.status.should.eql(200);
+            res.text.should.containDeep('student resume');
+            done(err);
+        });
+    });
+
 });

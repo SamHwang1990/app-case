@@ -12,3 +12,19 @@ exports.index = function(req,res,next){
         }
     });
 };
+
+exports.list = function(req,res,next){
+    res.render('list',{
+        topic:{
+            title:'student list'
+        }
+    });
+};
+
+exports.resume = function(req,res,next){
+    res.render('resume',{
+        topic:{
+            title:'student resume'
+        }
+    });
+};
