@@ -2,11 +2,30 @@
  * Created by samhwang1990@gmail.com on 14-9-19.
  * Responsive stylus
  ***********************************************/
+@media all and (max-width:767px)
+	/* ac_index responsive start */
+	#ac_index_content
+		.ac_sortItem
+			&:nth-of-type(2n)
+				background-color #dd4b39
+				h3
+					color #fff
+					span
+						color #fff
+
+	/* ac_index responsive end */
+
+	/* ac_resume responsive start */
+	.resume_list
+		h2
+			text-align center
+	/* ac_resume responsive end */
+
 
 @media all and (min-width: 768px)
 	/* ac_index responsive start */
 
-	#ac_index_jumbotron
+	.ac_jumbotron
 		padding-top 60px
 		padding-bottom 60px
 		font-size 24px
@@ -19,13 +38,24 @@
 		p
 			font-size 24px
 
+	.resume_list
+		padding-top 60px
+		padding-bottom 60px
+		text-align left
+
+		h2
+			font-size 40px
+			font-weight 800
+			line-height 1
+			margin-bottom 30px
+
 	/* ac_index responsive end */
 
 
 @media all and (min-width: 992px)
-	/* region ac_index responsive start */
+	/* ac_index responsive start */
 
-	#ac_index_jumbotron
+	.ac_jumbotron
 		h1
 		p
 			margin-right 380px
@@ -38,4 +68,4 @@
 				padding-right 30px
 
 
-	/* endregion ac_index responsive start */
+	/* ac_index responsive start */
