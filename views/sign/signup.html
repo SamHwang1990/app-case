@@ -1,0 +1,31 @@
+<div class="container ac_a_wrapper">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>注册一个新的系统用户：</h2>
+            <form role="form" action="/signup" method="post">
+                <div class="form-group">
+                    <label for="name" class="sr-only">用户名</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="用户名">
+                </div>
+                <div class="form-group">
+                    <label for="name_en" class="sr-only">英文名</label>
+                    <input type="text" class="form-control" id="name_en" name="name_en" placeholder="用户英文名">
+                </div>
+                <div class="form-group">
+                    <label for="email" class="sr-only">邮箱</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址">
+                </div>
+                <div class="form-group">
+                    <label for="pass" class="sr-only">密码</label>
+                    <input type="password" class="form-control" id="pass" name="pass" placeholder="用户密码">
+                </div>
+                <div class="form-group">
+                    <label for="pass_repeat" class="sr-only">重复密码</label>
+                    <input type="password" class="form-control" id="pass_repeat" name="pass_repeat" placeholder="重复上面的密码">
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+

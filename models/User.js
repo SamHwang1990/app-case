@@ -13,7 +13,7 @@ var UserSchema = new Schema({
     email:{type:String},
     url:{type:String},
     avatar:{type:String},
-    is_block:{type:Boolean, default:false},
+    active:{type:Boolean, default:false},
     create_date:{type:Date},
     last_login_date:{type:Date}
 });
