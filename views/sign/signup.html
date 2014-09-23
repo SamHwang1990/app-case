@@ -1,19 +1,36 @@
 <div class="container ac_a_wrapper">
+    <% if (typeof(error) !== 'undefined' && error) { %>
+    <div class="ac_callout ac_callout_danger">
+        <p>出错：<%= error %></p>
+    </div>
+    <% } %>
     <div class="row">
         <div class="col-md-4">
             <h2>注册一个新的系统用户：</h2>
             <form role="form" action="/signup" method="post">
                 <div class="form-group">
-                    <label for="name" class="sr-only">用户名</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="用户名">
+                    <label for="email" class="sr-only">邮箱</label>
+                    <% if(typeof(email) !== 'undefined'){ %>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址，用于登录" value="<%= email %>">
+                    <% } else { %>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址，用于登录">
+                    <% } %>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="sr-only">中文名</label>
+                    <% if(typeof(name) !== 'undefined'){ %>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="中文名" value="<%= name %>">
+                    <% }else { %>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="中文名">
+                    <% } %>
                 </div>
                 <div class="form-group">
                     <label for="name_en" class="sr-only">英文名</label>
-                    <input type="text" class="form-control" id="name_en" name="name_en" placeholder="用户英文名">
-                </div>
-                <div class="form-group">
-                    <label for="email" class="sr-only">邮箱</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址">
+                    <% if(typeof(name_en) !== 'undefined'){ %>
+                        <input type="text" class="form-control" id="name_en" name="name_en" placeholder="英文名" value="<%= name_en %>">
+                    <% }else { %>
+                        <input type="text" class="form-control" id="name_en" name="name_en" placeholder="英文名">
+                    <% } %>
                 </div>
                 <div class="form-group">
                     <label for="pass" class="sr-only">密码</label>

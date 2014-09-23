@@ -11,6 +11,7 @@ var path = require('path');
 var Loader = require('loader');
 var express = require('express');
 var session = require('express-session');
+var flash = require('connect-flash');
 var config = require('./config').config;
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
@@ -64,6 +65,7 @@ app.use(session({
     resave:true,
     saveUninitialized: true
 }));
+app.use(flash());
 
 app.use(passport.initialize());
 
@@ -121,7 +123,7 @@ routes(app);
 
 // error handler
 app.use(function (err, req, res, next) {
-    return res.send(500, err.message);
+    return res.status(500).send(err.message);
 });
 
 app.listen(config.port, function () {

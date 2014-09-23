@@ -8,7 +8,7 @@ body, p, input, textarea {
 	word-break: break-word;
 }
 
-textarea, input[type="text"],
+/*textarea, input[type="text"],
 input[type="password"],
 input[type="datetime"],
 input[type="datetime-local"],
@@ -24,7 +24,7 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
 	background: hsla(0, 0%, 0%, 0)
-}
+}*/
 
 pre {
 	background: #fee9cc;
@@ -64,6 +64,7 @@ textarea {
 	margin-bottom: 0;
 }
 
+/*
 input, textarea {
 	background: hsla(0, 0%, 0%, 0);
-}
+}*/

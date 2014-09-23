@@ -32,6 +32,7 @@ var config = {
     db_name: 'app_case_dev',
 
     session_secret: 'app_case', // 务必修改
+    auth_cookie_name: 'app_case',
 
     // 程序运行的端口
     port: 3000,
