@@ -89,13 +89,46 @@ exports.signup = function(req,res,next){
             gen_session(user, res);
             req.flash('success','欢迎加入 ' + config.name);
             res.render('index',{success:req.flash('success')});
-        })
-    })
+        });
+    });
 
 };
 
+//sign out
+exports.signout = function(req,res,next){
+    req.session.destroy();
+    res.clearCookie(config.auth_cookie_name, { path: '/' });
+    res.redirect(req.headers.referer || '/');
+};
 
+exports.auth_user = function(req,res,next){
+    var ep = new eventproxy();
+    ep.fail(next);
 
+    ep.all('get_user',function(user){
+        if(!user){
+            return next();
+        }
+        res.locals.current_user = req.session.user = user;
+        req.session.user.avatar = User.getGravatar(user);
+
+        next();
+    });
+
+    if(req.session.user){
+        ep.emit('get_user',req.session.user);
+    }else{
+        var cookie = req.cookies[config.auth_cookie_name];
+        if (!cookie) {
+            return next();
+        }
+        var auth_token = decrypt(cookie,config.session_secret);
+        var auth = auth_token.split('\t');
+        var user_id = auth[0];
+        User.getUserById(user_id,ep.done('get_user'));
+    }
+
+};
 // private
 
 function gen_session(user, res) {

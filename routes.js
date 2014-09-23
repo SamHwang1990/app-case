@@ -21,5 +21,6 @@ module.exports = function(app){
     // sign up, login, logout
     app.get('/signup', sign.showSignup);  // 跳转到注册页面
     app.post('/signup', sign.signup);  // 提交注册信息
+    app.post('/signout', sign.signout);  // 登出
 
 }

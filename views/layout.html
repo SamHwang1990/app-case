@@ -77,7 +77,11 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">首页</a></li>
-                <li><button class="btn btn-info navbar-btn">登出</button></li>
+                <li>
+                    <form action="/signout" method="post">
+                        <button type="submit" class="btn btn-info navbar-btn">登出</button>
+                    </form>
+                </li>
                 <li>&nbsp;&nbsp;<button class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-search"></span></button></li>
             </ul>
         </nav>

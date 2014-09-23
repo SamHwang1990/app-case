@@ -70,10 +70,8 @@ app.use(flash());
 app.use(passport.initialize());
 
 // custom middleware
-//app.use(require('./controllers/sign').auth_user);
-//app.use(auth.blockUser());
+app.use(require('./controllers/sign').auth_user);
 
-//app.use(Loader.stylus(__dirname));
 app.use(stylus.middleware({
     src: __dirname,
     dest: __dirname + "/public",
