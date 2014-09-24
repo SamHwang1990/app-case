@@ -87,7 +87,7 @@ exports.getUsersByIds = function (ids, callback) {
  * @param {Function} callback 回调函数
  */
 exports.getUsersByQuery = function (query, opt, callback) {
-    User.find(query, [], opt, callback);
+    User.find(query, {}, opt, callback);
 };
 
 exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, callback) {
@@ -99,6 +99,7 @@ exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, c
     user.avatar = avatar_url;
     user.active = false;
     user.create_date = Date.now();
+	user.last_login_date = null;
     user.save(callback);
 };
 

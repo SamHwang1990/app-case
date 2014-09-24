@@ -24,17 +24,24 @@ module.exports = function(app,express){
     // sign up, login, logout
     app.get('/signup', auth.signoutRequired, sign.showSignup);  // 跳转到注册页面
     app.post('/signup', auth.signoutRequired, sign.signup);     // 提交注册信息
-    app.post('/signout', auth.signinRequired, sign.signout);                         // 登出
+    app.post('/signout', auth.signinRequired, sign.signout);    // 登出
     app.get('/signin', auth.signoutRequired, sign.showSignin);  //跳转到登录页面
     app.post('/signin',auth.signoutRequired,sign.signin);       //提交登录信息
 
-    // backend
+    // region backend
 	var backend_router = express.Router();
+	app.use('/backend', backend_router);
 	backend_router.use(auth.signinRequired);
 
 	//backend index
 	backend_router.route(['/','/index'])
 		.get(backend.index);
 
-    app.use('/backend', backend_router);
-}
+	//backend user mgr
+	backend_router.route(['/UserMgr','/UserMgr/list'])
+		.get(backend.UserMgr.showList);
+
+	backend_router.get('/UserMgr/ajaxList',backend.UserMgr.ajaxList);
+
+	//endregion
+};

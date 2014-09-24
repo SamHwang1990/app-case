@@ -9,7 +9,9 @@ exports.index = function(req,res,next){
 	return res.render('backend/index',{
 		isBack:true,
 		topic:{
-			title:"首页-后台管理-" + config.description
+			title:"首页 - 后台管理 - " + config.description
 		}
 	})
 };
+
+exports.UserMgr = require('./userMgr');

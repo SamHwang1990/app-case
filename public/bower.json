@@ -20,6 +20,7 @@
   "dependencies": {
     "jquery": "~2.1.1",
     "bootstrap": "~3.2.0",
-    "headroom.js": "~0.7.0"
+    "headroom.js": "~0.7.0",
+    "bootstrap-table": "~1.2.3"
   }
 }

@@ -92,7 +92,7 @@ exports.signup = function(req,res,next){
             // store session cookie
             gen_session(user, res, false);
             req.flash('success','欢迎加入 ' + config.name);
-            res.render('index',{success:req.flash('success')});
+            res.redirect('/');
         });
     });
 

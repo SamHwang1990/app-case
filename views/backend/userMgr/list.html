@@ -1,0 +1,18 @@
+<%- Loader('/public/backend/usermgr.min.css')
+.css('/public/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<div class="container ac_b_wrapper">
+    <% if (typeof(error) !== 'undefined' && error) { %>
+    <div class="ac_callout ac_callout_danger">
+        <p>出错：<%= error %></p>
+    </div>
+    <% } %>
+    <table id="userlist_table"></table>
+</div>
+<!-- js -->
+<%- Loader('/public/backend/usermgr_list.min.js')
+.js('/public/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
+.js('/public/javascripts/backend/userMgr/list.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
