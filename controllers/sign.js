@@ -13,7 +13,11 @@ var User = require('../proxy').User;
 
 //sign up
 exports.showSignup = function (req, res) {
-    res.render('sign/signup');
+    res.render('sign/signup',{
+        topic: {
+            title: '用户注册 - ' + config.description
+        }
+    });
 };
 
 exports.signup = function(req,res,next){

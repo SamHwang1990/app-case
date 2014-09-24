@@ -7,7 +7,8 @@
  */
 exports.signinRequired = function (req, res, next) {
     if (!req.session.user) {
-        res.render('notify/notify', {error: '未登入用户不能发布话题。'});
+        req.flash('error','使用该功能需要登录系统。');
+        res.render('notify/notify', {error: req.flash('error')});
         return;
     }
     next();
@@ -17,5 +18,6 @@ exports.signoutRequired = function(req,res,next){
     if(!req.session.user){
         return next();
     }
-    res.render('notify/notify', {error: '您已登录。'});
+    req.flash('error','使用该功能需要登出系统。');
+    res.render('notify/notify', {error:req.flash('error')});
 }
