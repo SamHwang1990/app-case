@@ -90,7 +90,7 @@ exports.signup = function(req,res,next){
             }
 
             // store session cookie
-            gen_session(user, res);
+            gen_session(user, res, false);
             req.flash('success','欢迎加入 ' + config.name);
             res.render('index',{success:req.flash('success')});
         });
@@ -133,6 +133,7 @@ exports.signin = function(req,res,next){
     pass = sanitizer.sanitize(pass);
 
     var rememberme = validator.trim(req.body.rememberme);
+	rememberme = rememberme === 'on'?true:false;
 
     if(email == '' || pass == ''){
         req.flash('error','信息不完整。');
@@ -163,7 +164,7 @@ exports.signin = function(req,res,next){
             return;
         }
         //store session cookie
-        gen_session(user,res);
+        gen_session(user,res,rememberme);
         //check at some page just jump to home page
         var refer = req.session._loginReferer || '/';
         for (var i = 0, len = notJump.length; i !== len; ++i) {
@@ -203,11 +204,14 @@ exports.auth_user = function(req,res,next){
     }
 
 };
-// private
 
-function gen_session(user, res) {
+// private
+function gen_session(user, res, rememberme) {
     var auth_token = encrypt(user._id + '\t' + user.name + '\t' + user.pass + '\t' + user.email, config.session_secret);
-    res.cookie(config.auth_cookie_name,auth_token, {path: '/', maxAge: 1000 * 60 * 60 * 24 * 30}); //cookie 有效期30天
+	if(rememberme)
+		res.cookie(config.auth_cookie_name,auth_token, {path: '/', maxAge: 1000 * 60 * 60 * 24 * 30}); //cookie 有效期30天
+	else
+		res.cookie(config.auth_cookie_name,auth_token, {path: '/'}); //generate a session cookie, which will delete when browser closed
 }
 
 exports.gen_session = gen_session;

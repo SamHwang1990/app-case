@@ -5,6 +5,7 @@
 
 var site = require('./controllers/site');
 var sign = require('./controllers/sign');
+var backend = require('./controllers/backend');
 var config = require('./config');
 var auth = require('./middlewares/auth');
 
@@ -27,5 +28,5 @@ module.exports = function(app){
     app.post('/signin',auth.signoutRequired,sign.signin);       //提交登录信息
 
     //backend
-    app.get('/backend/index', auth.signinRequired);
+    app.get('/backend/index', auth.signinRequired, backend.index);
 }

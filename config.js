@@ -23,7 +23,7 @@ var config = {
         '<meta name="author" content = "sam@app" />',
     ],
     site_logo:'<img src="/public/images/logo.png" title="申博成功案例|专业的留学申请机构" />', //default is 'name'
-    site_icon:'public/images/app_icon_32.png',
+    site_icon:'/public/images/app_icon_32.png',
     // 社区的域名
     host: 'localhost',
 
