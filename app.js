@@ -117,7 +117,7 @@ passport.deserializeUser(function (user, done) {
 app.use(busboy());
 
 // routes
-routes(app);
+routes(app,express);
 
 // error handler
 app.use(function (err, req, res, next) {

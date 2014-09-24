@@ -9,7 +9,8 @@ var backend = require('./controllers/backend');
 var config = require('./config');
 var auth = require('./middlewares/auth');
 
-module.exports = function(app){
+module.exports = function(app,express){
+
     // home page Test
     app.get('/', site.index);
 
@@ -27,6 +28,13 @@ module.exports = function(app){
     app.get('/signin', auth.signoutRequired, sign.showSignin);  //跳转到登录页面
     app.post('/signin',auth.signoutRequired,sign.signin);       //提交登录信息
 
-    //backend
-    app.get('/backend/index', auth.signinRequired, backend.index);
+    // backend
+	var backend_router = express.Router();
+	backend_router.use(auth.signinRequired);
+
+	//backend index
+	backend_router.route(['/','/index'])
+		.get(backend.index);
+
+    app.use('/backend', backend_router);
 }
