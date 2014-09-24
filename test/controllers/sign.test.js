@@ -17,4 +17,12 @@ describe('test/controllers/sign.test.js', function () {
         });
     });
 
+    it('should /signin 200', function(done){
+        request.get('/signin').end(function(err,res){
+            res.status.should.eql(200);
+            res.text.should.containDeep('用户登录');
+            done(err);
+        })
+    })
+
 });

@@ -6,6 +6,7 @@
 var site = require('./controllers/site');
 var sign = require('./controllers/sign');
 var config = require('./config');
+var auth = require('./middlewares/auth');
 
 module.exports = function(app){
     // home page Test
@@ -22,5 +23,6 @@ module.exports = function(app){
     app.get('/signup', sign.showSignup);  // 跳转到注册页面
     app.post('/signup', sign.signup);  // 提交注册信息
     app.post('/signout', sign.signout);  // 登出
-
+    app.get('/signin', auth.signoutRequired, sign.showSignin);
+    app.post('/signin',auth.signoutRequired,sign.signin);
 }

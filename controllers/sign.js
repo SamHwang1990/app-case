@@ -31,37 +31,37 @@ exports.signup = function(req,res,next){
 
     if (name === '' || name_en === '' || pass === '' || pass_repeat === '' || email === '') {
         req.flash('error','信息不完整。');
-        res.render('sign/signup', {error: '信息不完整。',name: name, email: email, name_en:name_en});
+        res.render('sign/signup', {error: req.flash('error').toString(),name: name, email: email, name_en:name_en});
         return;
     }
 
     if(!validator.isEmail(email)){
         req.flash('error','不正确的电子邮箱。');
-        res.render('sign/signup', {error: '不正确的电子邮箱。', name: name, email: email, name_en:name_en});
+        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
         return;
     }
 
     if (name.length < 1) {
         req.flash('error','用户名至少需要1个字符。');
-        res.render('sign/signup', {error: '用户名至少需要1个字符。', name: name, email: email, name_en:name_en});
+        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
         return;
     }
 
     if (name_en.length < 1) {
         req.flash('error','用户英文名至少需要1个字符。');
-        res.render('sign/signup', {error: '用户英文名至少需要1个字符。', name: name, email: email, name_en:name_en});
+        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
         return;
     }
 
     if(!validator.isAlphanumeric(name_en)){
         req.flash('error','用户英文名只能使用0-9，a-z，A-Z。');
-        res.render('sign/signup', {error: '用户英文名只能使用0-9，a-z，A-Z。', name: name, email: email, name_en:name_en});
+        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
         return;
     }
 
     if (pass !== pass_repeat) {
         req.flash('error','两次密码输入不一致。');
-        res.render('sign/signup', {error: '两次密码输入不一致。', name: name, email: email, name_en:name_en});
+        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
         return;
     }
 
@@ -71,7 +71,7 @@ exports.signup = function(req,res,next){
 
         if(user !== null){
             req.flash('error','邮箱名已被占用。');
-            res.render('sign/signup',{error: '邮箱名已被占用。', name:name, email:email, name_en:name_en});
+            res.render('sign/signup',{error: req.flash('error').toString(), name:name, email:email, name_en:name_en});
             return;
         }
 
@@ -101,6 +101,77 @@ exports.signout = function(req,res,next){
     res.redirect(req.headers.referer || '/');
 };
 
+//sign in
+exports.showSignin = function(req,res,next){
+    req.session._loginReferer = req.headers.referer;
+    res.render('sign/signin',{
+        topic:{
+            title:'用户登录 - ' + config.description
+        }
+    });
+};
+
+
+/**
+ * define some page when login just jump to the home page
+ * @type {Array}
+ */
+var notJump = [
+    '/signup',         //regist page
+];
+
+exports.signin = function(req,res,next){
+    var email = validator.trim(req.body.email);
+    email = email.toLowerCase();
+    email = sanitizer.sanitize(email);
+
+    var pass = validator.trim(req.body.pass);
+    pass = sanitizer.sanitize(pass);
+
+    var rememberme = validator.trim(req.body.rememberme);
+
+    if(email == '' || pass == ''){
+        req.flash('error','信息不完整。');
+        res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+        return;
+    }
+
+    if(!validator.isEmail(email)){
+        req.flash('error','不正确的邮箱地址。');
+        res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+        return;
+    }
+
+    User.getUserByMail(email,function(err,user){
+        if(err){
+            return next(err);
+        }
+        if(!user){
+            req.flash('error','用户不存在。');
+            res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+            return;
+        }
+
+        pass = md5(pass);
+        if(pass !== user.pass){
+            req.flash('error','密码错误。');
+            res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+            return;
+        }
+        //store session cookie
+        gen_session(user,res);
+        //check at some page just jump to home page
+        var refer = req.session._loginReferer || '/';
+        for (var i = 0, len = notJump.length; i !== len; ++i) {
+            if (refer.indexOf(notJump[i]) >= 0) {
+                refer = '/';
+                break;
+            }
+        }
+        res.redirect(refer);
+    });
+};
+
 exports.auth_user = function(req,res,next){
     var ep = new eventproxy();
     ep.fail(next);
@@ -111,7 +182,6 @@ exports.auth_user = function(req,res,next){
         }
         res.locals.current_user = req.session.user = user;
         req.session.user.avatar = User.getGravatar(user);
-
         next();
     });
 

@@ -62,26 +62,43 @@
         </div>
         <nav class="collapse navbar-collapse bs-navbar-collapse ac-navbar-collapse" role="navigation">
             <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="#">本科</a>
-                </li>
-                <li>
-                    <a href="#">高中</a>
-                </li>
-                <li>
-                    <a href="#">研究生</a>
-                </li>
-                <li>
-                    <a href="#">本科转学</a>
-                </li>
+                <% if(typeof(isBack) !== 'undefined' && isBack) { %>
+                    <li>
+                        <a href="#">用户管理</a>
+                    </li>
+                    <li>
+                        <a href="#">留学类型</a>
+                    </li>
+                    <li>
+                        <a href="#">筛选管理</a>
+                    </li>
+                    <li>
+                        <a href="#">学生管理</a>
+                    </li>
+                <% } else { %>
+                    <li>
+                        <a href="#">本科</a>
+                    </li>
+                    <li>
+                        <a href="#">高中</a>
+                    </li>
+                    <li>
+                        <a href="#">研究生</a>
+                    </li>
+                    <li>
+                        <a href="#">本科转学</a>
+                    </li>
+                <% } %>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">首页</a></li>
+                <li><a href="/">首页</a></li>
+                <% if(typeof(current_user) !== 'undefined') { %>
                 <li>
                     <form action="/signout" method="post">
                         <button type="submit" class="btn btn-info navbar-btn">登出</button>
                     </form>
                 </li>
+                <% } %>
                 <li>&nbsp;&nbsp;<button class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-search"></span></button></li>
             </ul>
         </nav>
@@ -99,7 +116,7 @@
         <p>Maintained by <a href="https://github.com/SamHwang1990" target="_blank">sam</a></p>
         <p>本项目源码受 <span class="label label-primary">MIT</span> 开源协议保护</p>
         <ul class="ac_footer_links">
-            <li><a href="/admin/signin" title="后台登录">&sdot;</a></li>
+            <li><a href="/signin" title="后台登录">&sdot;</a></li>
             <li>当前版本 <%= config.version %></li>
             <li><a href="/signup" title="用户注册">&sdot;</a></li>
             <li><a href="https://github.com/SamHwang1990/app-case" target="_blank">GitHub仓库</a> </li>
