@@ -8,9 +8,12 @@
         <p>出错：<%= error %></p>
     </div>
     <% } %>
+    <div class="page-header">
+        <h2>用户列表</h2>
+    </div>
     <div id="userlist_table_toolbar">
         <div class="form-inline" role="form">
-            <button type="submit" class="btn btn-primary">添加</button>
+            <a href="/backend/UserMgr/New" type="submit" class="btn btn-primary">添加</a>
         </div>
     </div>
     <table id="userlist_table"></table>

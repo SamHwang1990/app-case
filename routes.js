@@ -44,6 +44,8 @@ module.exports = function(app,express){
 	backend_router.route(['/UserMgr/Edit/:user_email'])
 		.get(backend.UserMgr.showEdit)
 		.post(backend.UserMgr.edit);
-
+	backend_router.route(['/UserMgr/New'])
+		.get(backend.UserMgr.showNew)
+		.post(backend.UserMgr.new);
 	//endregion
 };

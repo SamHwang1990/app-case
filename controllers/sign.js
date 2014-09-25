@@ -34,39 +34,50 @@ exports.signup = function(req,res,next){
     var pass_repeat = validator.trim(req.body.pass_repeat);
     pass_repeat = sanitizer.sanitize(pass_repeat);
 
+	var error_render = function(req, res){
+		res.render('sign/signup', {
+			topic: {
+				title: '用户注册 - ' + config.description
+			},
+			error: req.flash('error').toString(),
+			name: name,
+			email: email,
+			name_en:name_en});
+	};
+
     if (name === '' || name_en === '' || pass === '' || pass_repeat === '' || email === '') {
         req.flash('error','信息不完整。');
-        res.render('sign/signup', {error: req.flash('error').toString(),name: name, email: email, name_en:name_en});
+	    error_render(req,res);
         return;
     }
 
     if(!validator.isEmail(email)){
         req.flash('error','不正确的电子邮箱。');
-        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
+	    error_render(req,res);
         return;
     }
 
     if (name.length < 1) {
         req.flash('error','用户名至少需要1个字符。');
-        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
+	    error_render(req,res);
         return;
     }
 
     if (name_en.length < 1) {
         req.flash('error','用户英文名至少需要1个字符。');
-        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
+	    error_render(req,res);
         return;
     }
 
     if(!validator.isAlphanumeric(name_en)){
         req.flash('error','用户英文名只能使用0-9，a-z，A-Z。');
-        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
+	    error_render(req,res);
         return;
     }
 
     if (pass !== pass_repeat) {
         req.flash('error','两次密码输入不一致。');
-        res.render('sign/signup', {error: req.flash('error').toString(), name: name, email: email, name_en:name_en});
+	    error_render(req,res);
         return;
     }
 
@@ -76,7 +87,7 @@ exports.signup = function(req,res,next){
 
         if(user !== null){
             req.flash('error','邮箱名已被占用。');
-            res.render('sign/signup',{error: req.flash('error').toString(), name:name, email:email, name_en:name_en});
+	        error_render(req,res);
             return;
         }
 
@@ -133,15 +144,25 @@ exports.signin = function(req,res,next){
     var rememberme = validator.trim(req.body.rememberme);
 	rememberme = rememberme === 'on'?true:false;
 
+	var error_render = function(req,res){
+		res.render('sign/signin',{
+			topic:{
+				title:'用户登录 - ' + config.description
+			},
+			error:req.flash('error').toString(),
+			email:email
+		});
+	};
+
     if(email == '' || pass == ''){
         req.flash('error','信息不完整。');
-        res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+	    error_render(req,res);
         return;
     }
 
     if(!validator.isEmail(email)){
         req.flash('error','不正确的邮箱地址。');
-        res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+	    error_render(req,res);
         return;
     }
 
@@ -151,14 +172,14 @@ exports.signin = function(req,res,next){
         }
         if(!user){
             req.flash('error','用户不存在。');
-            res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+	        error_render(req,res);
             return;
         }
 
         pass = crypt.md5(pass);
         if(pass !== user.pass){
             req.flash('error','密码错误。');
-            res.render('sign/signin',{error:req.flash('error').toString(), email:email});
+	        error_render(req,res);
             return;
         }
 

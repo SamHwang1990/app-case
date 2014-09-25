@@ -170,3 +170,103 @@ exports.edit = function(req, res, next){
 	});
 
 };
+
+exports.showNew = function(req, res, next){
+	res.render('backend/userMgr/new',{
+		success:req.flash('success').toString(),
+		isBack:true,
+		topic:{
+			title:'添加用户 - 用户管理 - 后台管理 - ' + config.description
+		}
+	})
+};
+
+exports.new = function(req, res, next){
+	var name = validator.trim(req.body.name);
+	name = sanitizer.sanitize(name);
+	var name_en = validator.trim(req.body.name_en);
+	name_en = sanitizer.sanitize(name_en);
+	var email = validator.trim(req.body.email);
+	email = email.toLowerCase();
+	var pass = validator.trim(req.body.pass);
+	pass = sanitizer.sanitize(pass);
+	email = sanitizer.sanitize(email);
+	var pass_repeat = validator.trim(req.body.pass_repeat);
+	pass_repeat = sanitizer.sanitize(pass_repeat);
+
+	var active = validator.trim(req.body.active);
+	active = active === 'on'?false:true;
+
+	var error_render = function(req, res){
+		res.render('backend/userMgr/new', {
+			error: req.flash('error').toString(),
+			isBack:true,
+			topic:{
+				title:'添加用户 - 用户管理 - 后台管理 - ' + config.description
+			},
+			error: req.flash('error').toString(),
+			name: name,
+			email: email,
+			name_en:name_en});
+	};
+
+	if (name === '' || name_en === '' || pass === '' || pass_repeat === '' || email === '') {
+		req.flash('error','信息不完整。');
+		error_render(req,res);
+		return;
+	}
+
+	if(!validator.isEmail(email)){
+		req.flash('error','不正确的电子邮箱。');
+		error_render(req,res);
+		return;
+	}
+
+	if (name.length < 1) {
+		req.flash('error','用户名至少需要1个字符。');
+		error_render(req,res);
+		return;
+	}
+
+	if (name_en.length < 1) {
+		req.flash('error','用户英文名至少需要1个字符。');
+		error_render(req,res);
+		return;
+	}
+
+	if(!validator.isAlphanumeric(name_en)){
+		req.flash('error','用户英文名只能使用0-9，a-z，A-Z。');
+		error_render(req,res);
+		return;
+	}
+
+	if (pass !== pass_repeat) {
+		req.flash('error','两次密码输入不一致。');
+		error_render(req,res);
+		return;
+	}
+
+	User.getUserByMail(email,function(err,user){
+		if(err)
+			return next(err);
+
+		if(user !== null){
+			req.flash('error','邮箱名已被占用。');
+			error_render(req,res);
+			return;
+		}
+
+		// md5 the pass
+		pass = crypt.md5(pass);
+		//create gravatar
+		var avatar_url = User.makeGravatar(email);
+
+		User.newAndSave(name,name_en,pass,email,avatar_url,true,Date(),null,function(err, user){
+			if (err) {
+				return next(err);
+			}
+			res.redirect('/backend/UserMgr/List');
+			//res.render('notify/notify', {success: '注册成功，请登录！'});
+		});
+	});
+}

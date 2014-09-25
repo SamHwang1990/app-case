@@ -7,17 +7,10 @@
     <div class="row">
         <div class="col-md-4">
             <h2>
-                修改系统用户信息：
+                添加系统用户：
             </h2>
-            <p>
-                <span>
-                    <img src="<%= avatar %>" />
-                </span>
-            </p>
             <form role="form" method="post">
                 <div class="form-group">
-                    <input type="hidden" name="avatar" value="<%= avatar %>" />
-                    <input type="hidden" name="user_id" value="<%= user_id %>" />
                     <label for="email" class="sr-only">邮箱</label>
                     <% if(typeof(email) !== 'undefined'){ %>
                     <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址，用于登录" value="<%= email %>">
@@ -43,7 +36,7 @@
                 </div>
                 <div class="form-group">
                     <label for="pass" class="sr-only">密码</label>
-                    <input type="password" class="form-control" id="pass" name="pass" placeholder="用户密码,不修改请留空">
+                    <input type="password" class="form-control" id="pass" name="pass" placeholder="用户密码">
                 </div>
                 <div class="form-group">
                     <label for="pass_repeat" class="sr-only">重复密码</label>
@@ -51,7 +44,7 @@
                 </div>
                 <div class="checkbox">
                     <label>
-                        <% if(typeof(active) !== 'undefined' && active == true) { %>
+                        <% if(typeof(active) === 'undefined' || typeof(active) !== 'undefined' && active == true) { %>
                         <input type="checkbox" name="active">
                         <% } else { %>
                         <input type="checkbox" name="active" checked>

@@ -1,0 +1,12 @@
+<% if(typeof(error) !== 'undefined') { %>
+<div class="ac_callout ac_callout_danger">
+    <h4>通知</h4>
+    <p><%= error %></p>
+</div>
+<% } %>
+<% if(typeof(success) !== 'undefined') { %>
+<div class="ac_callout ac_callout_info">
+    <h4>通知</h4>
+    <p><%= success %></p>
+</div>
+<% } %>
