@@ -8,6 +8,7 @@ var eventproxy = require('eventproxy');
 
 var crypto = require('crypto');
 var config = require('../config').config;
+var crypt = require('../libs/crypt');
 
 var User = require('../proxy').User;
 
@@ -80,7 +81,7 @@ exports.signup = function(req,res,next){
         }
 
         // md5 the pass
-        pass = md5(pass);
+        pass = crypt.md5(pass);
         //create gravatar
         var avatar_url = User.makeGravatar(email);
 
@@ -90,11 +91,6 @@ exports.signup = function(req,res,next){
             }
 
 	        res.render('notify/notify', {success: '注册成功，请登录！'});
-
-            /*// store session cookie
-            gen_session(user, res, false);
-            req.flash('success','欢迎加入 ' + config.name);
-            res.redirect('/');*/
         });
     });
 
@@ -159,7 +155,7 @@ exports.signin = function(req,res,next){
             return;
         }
 
-        pass = md5(pass);
+        pass = crypt.md5(pass);
         if(pass !== user.pass){
             req.flash('error','密码错误。');
             res.render('sign/signin',{error:req.flash('error').toString(), email:email});
@@ -185,26 +181,6 @@ exports.signin = function(req,res,next){
 		    res.redirect(refer);
 
 	    });
-
-
-	    /*User.newAndSave(user.name, user.name_en, user.pass, user.email, user.avatar,user.active, user.create_date, Date(),
-		    function(err,doc){
-			    if(err)
-				    return next(err);
-
-			    //store session cookie
-			    gen_session(user,res,rememberme);
-			    //check at some page just jump to home page
-			    var refer = req.session._loginReferer || '/';
-			    for (var i = 0, len = notJump.length; i !== len; ++i) {
-				    if (refer.indexOf(notJump[i]) >= 0) {
-					    refer = '/';
-					    break;
-				    }
-			    }
-			    res.redirect(refer);
-		    }
-	    );*/
     });
 };
 
@@ -237,7 +213,7 @@ exports.auth_user = function(req,res,next){
         if (!cookie) {
             return next();
         }
-        var auth_token = decrypt(cookie,config.session_secret);
+        var auth_token = crypt.decrypt(cookie,config.session_secret);
         var auth = auth_token.split('\t');
         var user_id = auth[0];
         User.getUserById(user_id,ep.done('get_user'));
@@ -247,7 +223,7 @@ exports.auth_user = function(req,res,next){
 
 // private
 function gen_session(user, res, rememberme) {
-    var auth_token = encrypt(user._id + '\t' + user.name + '\t' + user.pass + '\t' + user.email, config.session_secret);
+    var auth_token = crypt.encrypt(user._id + '\t' + user.name + '\t' + user.pass + '\t' + user.email, config.session_secret);
 	if(rememberme)
 		res.cookie(config.auth_cookie_name,auth_token, {path: '/', maxAge: 1000 * 60 * 60 * 24 * 30}); //cookie 有效期30天
 	else
@@ -255,24 +231,3 @@ function gen_session(user, res, rememberme) {
 }
 
 exports.gen_session = gen_session;
-
-function encrypt(str, secret) {
-    var cipher = crypto.createCipher('aes192', secret);
-    var enc = cipher.update(str, 'utf8', 'hex');
-    enc += cipher.final('hex');
-    return enc;
-}
-
-function decrypt(str, secret) {
-    var decipher = crypto.createDecipher('aes192', secret);
-    var dec = decipher.update(str, 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
-}
-
-function md5(str){
-    var md5sum = crypto.createHash('md5');
-    md5sum.update(str);
-    str = md5sum.digest('hex');
-    return str;
-}

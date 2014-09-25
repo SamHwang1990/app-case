@@ -97,14 +97,14 @@ exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, c
     user.pass = pass;
     user.email = email;
     user.avatar = avatar_url;
-    user.active = false;
+    user.active = true;
     user.create_date = Date();
 	user.last_login_date = null;
     user.save(callback);
 };
 
 var makeGravatar = function (email) {
-    return 'http://www.gravatar.com/avatar/' + utility.md5(email.toLowerCase()) + '?size=48';
+    return 'http://www.gravatar.com/avatar/' + utility.md5(email.toLowerCase()) + '?size=48&d=identicon';
 };
 exports.makeGravatar = makeGravatar;
 

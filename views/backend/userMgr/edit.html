@@ -1,0 +1,70 @@
+<div class="container ac_b_wrapper">
+    <% if (typeof(error) !== 'undefined' && error) { %>
+    <div class="ac_callout ac_callout_danger">
+        <p>出错：<%= error %></p>
+    </div>
+    <% } %>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>
+                修改系统用户信息：
+            </h2>
+            <p>
+                <span>
+                    <img src="<%= avatar %>" />
+                </span>
+            </p>
+            <form role="form" method="post">
+                <div class="form-group">
+                    <input type="hidden" name="avatar" value="<%= avatar %>" />
+                    <input type="hidden" name="user_id" value="<%= user_id %>" />
+                    <label for="email" class="sr-only">邮箱</label>
+                    <% if(typeof(email) !== 'undefined'){ %>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址，用于登录" value="<%= email %>">
+                    <% } else { %>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址，用于登录">
+                    <% } %>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="sr-only">中文名</label>
+                    <% if(typeof(name) !== 'undefined'){ %>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="中文名" value="<%= name %>">
+                    <% }else { %>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="中文名">
+                    <% } %>
+                </div>
+                <div class="form-group">
+                    <label for="name_en" class="sr-only">英文名</label>
+                    <% if(typeof(name_en) !== 'undefined'){ %>
+                    <input type="text" class="form-control" id="name_en" name="name_en" placeholder="英文名" value="<%= name_en %>">
+                    <% }else { %>
+                    <input type="text" class="form-control" id="name_en" name="name_en" placeholder="英文名">
+                    <% } %>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <label for="pass" class="sr-only">密码</label>
+                        <input type="password" class="form-control" id="pass" name="pass" placeholder="用户密码">
+                        <span class="input-group-addon">不修改请留空</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pass_repeat" class="sr-only">重复密码</label>
+                    <input type="password" class="form-control" id="pass_repeat" name="pass_repeat" placeholder="重复上面的密码">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <% if(typeof(active) !== 'undefined' && active == true) { %>
+                        <input type="checkbox" name="active">
+                        <% } else { %>
+                        <input type="checkbox" name="active" checked>
+                        <% } %>
+                        是否禁用
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+

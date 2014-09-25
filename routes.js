@@ -40,8 +40,10 @@ module.exports = function(app,express){
 	//backend user mgr
 	backend_router.route(['/UserMgr','/UserMgr/list'])
 		.get(backend.UserMgr.showList);
-
 	backend_router.get('/UserMgr/ajaxList',backend.UserMgr.ajaxList);
+	backend_router.route(['/UserMgr/Edit/:user_email'])
+		.get(backend.UserMgr.showEdit)
+		.post(backend.UserMgr.edit);
 
 	//endregion
 };
