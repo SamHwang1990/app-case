@@ -16,6 +16,7 @@ var User = require('../../proxy').User;
 //list
 exports.showList = function(req, res, next){
 	res.render('backend/userMgr/list',{
+		success:req.flash('success').toString(),
 		isBack:true,
 		topic:{
 			title:'用户列表 - 用户管理 - 后台管理 - ' + config.description
@@ -163,7 +164,7 @@ exports.edit = function(req, res, next){
 			}
 
 			req.flash('success','用户信息保存成功。');
-			res.render('backend/userMgr/list',{success:req.flash('success').toString()});
+			res.redirect('/backend/UserMgr/list');
 			return;
 		});
 	});

@@ -16,7 +16,9 @@ $(document).ready(function () {
 		pageList: [10, 25, 50, 100, 200],
 		showColumns: true,
 		showRefresh: true,
+		showToggle:true,
 		minimumCountColumns: 2,
+		toolbar:"#userlist_table_toolbar",
 		formatLoadingMessage:function(){
 			return '数据加载中，请稍后！'
 		},
@@ -31,9 +33,6 @@ $(document).ready(function () {
 			return '没有找到符合条件的记录！'
 		},
 		columns: [{
-			field: 'state',
-			checkbox: true
-		}, {
 			field: 'name',
 			title: '中文名',
 			align: 'left',
