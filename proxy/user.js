@@ -90,7 +90,7 @@ exports.getUsersByQuery = function (query, opt, callback) {
     User.find(query, {}, opt, callback);
 };
 
-exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, callback) {
+exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, create_date, last_login_date, callback) {
     var user = new User();
     user.name = name;
     user.name_en = name_en;
@@ -98,7 +98,7 @@ exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, c
     user.email = email;
     user.avatar = avatar_url;
     user.active = false;
-    //user.create_date = Date();
+    user.create_date = Date();
 	user.last_login_date = null;
     user.save(callback);
 };

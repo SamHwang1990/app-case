@@ -84,15 +84,17 @@ exports.signup = function(req,res,next){
         //create gravatar
         var avatar_url = User.makeGravatar(email);
 
-        User.newAndSave(name,name_en,pass,email,avatar_url,true,function(err, user){
+        User.newAndSave(name,name_en,pass,email,avatar_url,true,Date(),null,function(err, user){
             if (err) {
                 return next(err);
             }
 
-            // store session cookie
+	        res.render('notify/notify', {success: '注册成功，请登录！'});
+
+            /*// store session cookie
             gen_session(user, res, false);
             req.flash('success','欢迎加入 ' + config.name);
-            res.redirect('/');
+            res.redirect('/');*/
         });
     });
 
@@ -163,17 +165,46 @@ exports.signin = function(req,res,next){
             res.render('sign/signin',{error:req.flash('error').toString(), email:email});
             return;
         }
-        //store session cookie
-        gen_session(user,res,rememberme);
-        //check at some page just jump to home page
-        var refer = req.session._loginReferer || '/';
-        for (var i = 0, len = notJump.length; i !== len; ++i) {
-            if (refer.indexOf(notJump[i]) >= 0) {
-                refer = '/';
-                break;
-            }
-        }
-        res.redirect(refer);
+
+	    user.last_login_date = Date();
+	    user.save(function(err){
+		    if (err) {
+			    return next(err);
+		    }
+
+		    //store session cookie
+		    gen_session(user,res,rememberme);
+		    //check at some page just jump to home page
+		    var refer = req.session._loginReferer || '/';
+		    for (var i = 0, len = notJump.length; i !== len; ++i) {
+			    if (refer.indexOf(notJump[i]) >= 0) {
+				    refer = '/';
+				    break;
+			    }
+		    }
+		    res.redirect(refer);
+
+	    });
+
+
+	    /*User.newAndSave(user.name, user.name_en, user.pass, user.email, user.avatar,user.active, user.create_date, Date(),
+		    function(err,doc){
+			    if(err)
+				    return next(err);
+
+			    //store session cookie
+			    gen_session(user,res,rememberme);
+			    //check at some page just jump to home page
+			    var refer = req.session._loginReferer || '/';
+			    for (var i = 0, len = notJump.length; i !== len; ++i) {
+				    if (refer.indexOf(notJump[i]) >= 0) {
+					    refer = '/';
+					    break;
+				    }
+			    }
+			    res.redirect(refer);
+		    }
+	    );*/
     });
 };
 
@@ -183,6 +214,10 @@ exports.auth_user = function(req,res,next){
 
     ep.all('get_user',function(user){
         if(!user){
+	        //req.session.destroy();
+	        delete req.session.user;
+	        res.clearCookie(config.auth_cookie_name, { path: '/' });
+	        req.flash('success','您的用户信息已被注销。请重新注册或联系管理员')
             return next();
         }
         res.locals.current_user = req.session.user = user;
@@ -191,7 +226,12 @@ exports.auth_user = function(req,res,next){
     });
 
     if(req.session.user){
-        ep.emit('get_user',req.session.user);
+	    User.getUserById(req.session.user._id,ep.done('get_user',function(user){
+		    if(!user)
+			    return ;
+		    else
+		        return user;
+	    }));
     }else{
         var cookie = req.cookies[config.auth_cookie_name];
         if (!cookie) {
