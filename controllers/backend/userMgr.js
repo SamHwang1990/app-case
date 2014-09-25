@@ -32,11 +32,11 @@ exports.ajaxList = function(req,res,next){
 		});
 	proxy.fail(next);
 
-	User.getUsersByQuery({},{skip: offset, limit: limit, sort:{name:-1}},proxy.done('users',function(users){
-		_.forEach(users,function(user){
-			user.create_date = 'hehe'
-			user.last_login_date = util.YYYYMMDD(user.last_login_date,'-');
+	User.getUsersByQuery({},{sort:{name:-1}},proxy.done('users',function(users){
+		return _.map(users, function(user){
+			user.create_date = util.YYYYMMDDHHmmss(user.create_date);
+			user.last_login_date = user.last_login_date !== '' ? util.YYYYMMDDHHmmss(user.last_login_date) : '';
+			return user;
 		});
-		return users;
 	}))
 };

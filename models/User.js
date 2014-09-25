@@ -5,7 +5,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var config = require('../config').config;
 var utility = require('utility');
-require('date-utils');
 
 var UserSchema = new Schema({
     name:{type:String},
@@ -15,8 +14,15 @@ var UserSchema = new Schema({
     url:{type:String},
     avatar:{type:String},
     active:{type:Boolean, default:false},
-    create_date:{type:Date, default:null},
-    last_login_date:{type:Date, default:null}
+    create_date:{type:String, default:Date(), get:function(val){
+	    return new Date(val);
+    }},
+    last_login_date:{type:String, default:null, get:function(val){
+	    if(val === null)
+	        return '';
+	    else
+			return new Date(val);
+	}}
 });
 
 UserSchema.virtual('avatar_url').get(function(){

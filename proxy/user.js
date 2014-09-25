@@ -98,7 +98,7 @@ exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, c
     user.email = email;
     user.avatar = avatar_url;
     user.active = false;
-    user.create_date = Date.now();
+    //user.create_date = Date();
 	user.last_login_date = null;
     user.save(callback);
 };
