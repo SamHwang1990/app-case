@@ -47,5 +47,7 @@ module.exports = function(app,express){
 	backend_router.route(['/UserMgr/New'])
 		.get(backend.UserMgr.showNew)
 		.post(backend.UserMgr.new);
+	backend_router.route(['/UserMgr/Delete/:user_email'])
+		.get(backend.UserMgr.delete);
 	//endregion
 };

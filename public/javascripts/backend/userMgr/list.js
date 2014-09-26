@@ -72,6 +72,18 @@ $(document).ready(function () {
 					return value;
 			}
 		},{
+			field:'active',
+			title:'状态',
+			align:'left',
+			halign:'left',
+			valign:'middle',
+			formatter:function(value){
+				if(value === true)
+					return '正常';
+				else
+					return '禁用';
+			}
+		},{
 			field: 'email',
 			title: '操作',
 			align:'center',
@@ -87,19 +99,12 @@ $(document).ready(function () {
 					'" title="' +
 					value +
 					'">修改用户信息</a>');
+
+				execArray.push('<a href="/backend/UserMgr/Delete/' +
+					value +
+					'" title="' + value +
+					'">删除用户信息</a>');
 				return execArray.join('&emsp;');
-		}
-		},{
-			field:'active',
-			title:'状态',
-			align:'left',
-			halign:'left',
-			valign:'middle',
-			formatter:function(value){
-				if(value === true)
-					return '正常';
-				else
-					return '禁用';
 			}
 		}]
 	})

@@ -270,3 +270,15 @@ exports.new = function(req, res, next){
 		});
 	});
 }
+
+exports.delete = function(req,res,next){
+	var email = validator.trim(req.params.user_email);
+	email = sanitizer.sanitize(email);
+
+	User.removeUserByEmail(email,function(err){
+		if(err)
+			return next(err);
+
+		res.redirect('/backend/UserMgr/List');
+	})
+};

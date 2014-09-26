@@ -90,6 +90,15 @@ exports.getUsersByQuery = function (query, opt, callback) {
     User.find(query, {}, opt, callback);
 };
 
+/**
+* 根据邮箱，删除用户
+* Callback:
+ * -err: 数据库异常
+* */
+exports.removeUserByEmail = function(email, callback){
+	User.remove({email:email},callback);
+};
+
 exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, create_date, last_login_date, callback) {
     var user = new User();
     user.name = name;
