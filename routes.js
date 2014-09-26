@@ -38,7 +38,7 @@ module.exports = function(app,express){
 		.get(backend.index);
 
 	//backend user mgr
-	backend_router.route(['/UserMgr','/UserMgr/list'])
+	backend_router.route(['/UserMgr','/UserMgr/List'])
 		.get(backend.UserMgr.showList);
 	backend_router.get('/UserMgr/ajaxList',backend.UserMgr.ajaxList);
 	backend_router.route(['/UserMgr/Edit/:user_email'])
@@ -49,5 +49,10 @@ module.exports = function(app,express){
 		.post(backend.UserMgr.new);
 	backend_router.route(['/UserMgr/Delete/:user_email'])
 		.get(backend.UserMgr.delete);
+
+	//backend sort mgr
+	backend_router.route(['/SortMgr','/SortMgr/List'])
+		.get(backend.SortMgr.showList);
+
 	//endregion
 };

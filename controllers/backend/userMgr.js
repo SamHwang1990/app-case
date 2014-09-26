@@ -164,7 +164,7 @@ exports.edit = function(req, res, next){
 			}
 
 			req.flash('success','用户信息保存成功。');
-			res.redirect('/backend/UserMgr/list');
+			res.redirect('/backend/UserMgr/List');
 			return;
 		});
 	});
