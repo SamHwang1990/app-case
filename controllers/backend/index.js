@@ -15,3 +15,4 @@ exports.index = function(req,res,next){
 };
 
 exports.UserMgr = require('./userMgr');
+exports.SortMgr = require('./sortMgr');

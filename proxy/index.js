@@ -3,3 +3,4 @@
  */
 
 exports.User = require('./user');
+exports.Sort = require('./sort');
