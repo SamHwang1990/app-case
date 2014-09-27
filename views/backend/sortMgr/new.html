@@ -31,40 +31,38 @@
                 <div class="col-md-4">
                     <form role="form" method="post">
                         <div class="form-group">
-                            <div class="form-group">
-                                <label for="name">1. 留学类型名</label>
-                                <% if(typeof(name) !== 'undefined'){ %>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="留学类型名" value="<%= name %>" />
-                                <% }else { %>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="留学类型名" />
-                                <% } %>
-                            </div>
-                            <div class="form-group">
-                                <label for="slug">2. 留学类型英文名</label>
-                                <% if(typeof(slug) !== 'undefined'){ %>
-                                <input type="text" class="form-control" id="slug" name="slug" placeholder="留学类型英文名" value="<%= slug %>" />
-                                <% }else { %>
-                                <input type="text" class="form-control" id="slug" name="slug" placeholder="留学类型英文名" />
-                                <% } %>
-                            </div>
-                            <div class="form-group">
-                                <label for="description" >3. 留学类型描述</label>
-                                <% if(typeof(slug) !== 'undefined'){ %>
-                                <input type="text" class="form-control" id="description" name="description" placeholder="留学类型描述，前台展示所用" value="<%= slug %>" />
-                                <% }else { %>
-                                <input type="text" class="form-control" id="description" name="description" placeholder="留学类型描述，前台展示所用" />
-                                <% } %>
-                            </div>
-                            <div class="form-group">
-                                <label for="remark" >4. 留学类型备注</label>
-                                <% if(typeof(remark) !== 'undefined'){ %>
-                                <textarea class="form-control" id="remark" name="remark" placeholder="留学类型备注，管理人员所用"><%= remark %></textarea>
-                                <% }else { %>
-                                <textarea class="form-control" id="remark" name="remark" placeholder="留学类型备注，管理人员所用"></textarea>
-                                <% } %>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-lg">提交</button>
+                            <label for="name">1. 留学类型名</label>
+                            <% if(typeof(name) !== 'undefined'){ %>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="留学类型名" value="<%= name %>" />
+                            <% }else { %>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="留学类型名" />
+                            <% } %>
                         </div>
+                        <div class="form-group">
+                            <label for="slug">2. 留学类型英文名</label>
+                            <% if(typeof(slug) !== 'undefined'){ %>
+                            <input type="text" class="form-control" id="slug" name="slug" placeholder="留学类型英文名" value="<%= slug %>" />
+                            <% }else { %>
+                            <input type="text" class="form-control" id="slug" name="slug" placeholder="留学类型英文名" />
+                            <% } %>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" >3. 留学类型描述</label>
+                            <% if(typeof(slug) !== 'undefined'){ %>
+                            <input type="text" class="form-control" id="description" name="description" placeholder="留学类型描述，前台展示所用" value="<%= slug %>" />
+                            <% }else { %>
+                            <input type="text" class="form-control" id="description" name="description" placeholder="留学类型描述，前台展示所用" />
+                            <% } %>
+                        </div>
+                        <div class="form-group">
+                            <label for="remark" >4. 留学类型备注</label>
+                            <% if(typeof(remark) !== 'undefined'){ %>
+                            <textarea class="form-control" id="remark" name="remark" placeholder="留学类型备注，管理人员所用"><%= remark %></textarea>
+                            <% }else { %>
+                            <textarea class="form-control" id="remark" name="remark" placeholder="留学类型备注，管理人员所用"></textarea>
+                            <% } %>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">提交</button>
                     </form>
                 </div>
             </div>
@@ -79,13 +77,19 @@
                      data-remark="dfdf" data-grade="1">
                     <div class="row">
                         <div class="col-sm-3">
-                            <h3 class="sort_eduType_item_name">
-                                毕业学校
+                            <h3>
+                                <p class="sort_eduType_item_name">毕业学校</p>
                                 <span class="sort_eduType_item_description">就是很多很多类型,怎么滴呀!</span>
                                 <span>
-                                    <a href="#" class="sort_eduType_item_addOption btn btn-default btn-sm" title="增加选项"><span class="glyphicon glyphicon-plus"></span></a>
-                                    <a href="#" class="sort_eduType_item_edit btn btn-default btn-sm" title="修改分类"><span class="glyphicon glyphicon-pencil"></span></a>
-                                    <a href="#" class="sort_eduType_item_remove btn btn-default btn-sm" title="删除分类"><span class="glyphicon glyphicon-trash"></span></a>
+                                    <button class="sort_eduType_item_addOption btn btn-default btn-sm" title="增加选项">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                    <button class="sort_eduType_item_edit btn btn-default btn-sm" title="修改分类">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </button>
+                                    <button class="sort_eduType_item_remove btn btn-default btn-sm" title="删除分类">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
                                 </span>
                             </h3>
                         </div>
@@ -101,9 +105,13 @@
                                         其中一个选项
                                     </section>
                                     <div class="cell-row-right-arrow">
-                                        <a class="sort_eduType_item_removeOption" href="#"><span class="glyphicon glyphicon-trash"></span></a>
+                                        <a class="sort_eduType_item_removeOption" href="#">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
                                         &nbsp;
-                                        <a class="sort_eduType_item_editOption" href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+                                        <a class="sort_eduType_item_editOption" href="#">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </a>
                                     </div>
                                 </section>
                             </div>
@@ -118,9 +126,13 @@
                                         其中一个选项
                                     </section>
                                     <div class="cell-row-right-arrow">
-                                        <a href="#" id="jkjk" class="sort_eduType_item_removeOption"><span class="glyphicon glyphicon-trash"></span></a>
+                                        <a class="sort_eduType_item_removeOption">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
                                         &nbsp;
-                                        <a href="#" class="sort_eduType_item_editOption"><span class="glyphicon glyphicon-pencil"></span></a>
+                                        <a class="sort_eduType_item_editOption">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </a>
                                     </div>
                                 </section>
                             </div>
