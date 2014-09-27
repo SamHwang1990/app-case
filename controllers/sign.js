@@ -154,7 +154,7 @@ exports.signin = function(req,res,next){
 		});
 	};
 
-    if(email == '' || pass == ''){
+    if(email === '' || pass === ''){
         req.flash('error','信息不完整。');
 	    error_render(req,res);
         return;
@@ -214,7 +214,7 @@ exports.auth_user = function(req,res,next){
 	        //req.session.destroy();
 	        delete req.session.user;
 	        res.clearCookie(config.auth_cookie_name, { path: '/' });
-	        req.flash('success','您的用户信息已被注销。请重新注册或联系管理员')
+	        req.flash('success','您的用户信息已被注销，请重新注册或联系管理员！');
             return next();
         }
         res.locals.current_user = req.session.user = user;

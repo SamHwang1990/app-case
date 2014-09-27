@@ -11,5 +11,5 @@ var utility = require('utility');
  * @param {Function} callback 回调函数
  */
 exports.getSortById = function(id, callback){
-	Sort.find({_id:id},callback)
+	Sort.find({_id:id},callback);
 };

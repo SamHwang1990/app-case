@@ -30,29 +30,11 @@ describe('/proxy/user',function(){
     });
 
     describe('getUsersByIds', function () {
-        var user;
-        before(function (done) {
-            support.createUser(function (err, user1) {
-                should.not.exist(err);
-                user = user1;
-                done();
-            });
-        });
 
         it('should ok with empty list', function (done) {
             User.getUsersByIds([], function (err, list) {
                 should.not.exist(err);
                 list.should.have.length(0);
-                done();
-            });
-        });
-
-        it('should ok', function (done) {
-            User.getUsersByIds([user._id], function (err, list) {
-                should.not.exist(err);
-                list.should.have.length(1);
-                var user1 = list[0];
-                user1.name.should.be.equal(user.name);
                 done();
             });
         });

@@ -53,6 +53,8 @@ module.exports = function(app,express){
 	//backend sort mgr
 	backend_router.route(['/SortMgr','/SortMgr/List'])
 		.get(backend.SortMgr.showList);
+	backend_router.route(['/SortMgr/New'])
+		.get(backend.SortMgr.showNew);
 
 	//endregion
 };

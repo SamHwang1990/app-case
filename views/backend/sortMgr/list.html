@@ -7,12 +7,56 @@
     <div class="page-header">
         <h2>筛选类别列表</h2>
     </div>
-    <p><a href="#" class="btn btn-primary">添加</a></p>
+    <p><a href="/backend/SortMgr/New" class="btn btn-primary">添加</a></p>
     <ul class="nav nav-tabs nav-justified" role="tablist">
-        <li class="active"><a href="#home" role="tab" data-toggle="tab">Home</a></li>
-        <li><a href="#profile" role="tab" data-toggle="tab">Profile</a></li>
-        <li><a href="#messages" role="tab" data-toggle="tab">Messages</a></li>
-        <li><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+        <li class="dropdown active">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Home <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#home" role="tab" data-toggle="tab">查看</a></li>
+                <li class="divider"></li>
+                <li><a href="#">编辑</a></li>
+                <li class="divider"></li>
+                <li><a href="#">删除</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Profile <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#profile" role="tab" data-toggle="tab">查看</a></li>
+                <li class="divider"></li>
+                <li><a href="#">编辑</a></li>
+                <li class="divider"></li>
+                <li><a href="#">删除</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Messages <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#messages" role="tab" data-toggle="tab">查看</a></li>
+                <li class="divider"></li>
+                <li><a href="#">编辑</a></li>
+                <li class="divider"></li>
+                <li><a href="#">删除</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Settings <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#settings" role="tab" data-toggle="tab">查看</a></li>
+                <li class="divider"></li>
+                <li><a href="#">编辑</a></li>
+                <li class="divider"></li>
+                <li><a href="#">删除</a></li>
+            </ul>
+        </li>
         <!--<li><a href="/">添加</a></li>-->
     </ul>
     <!-- Tab panes -->

@@ -21,3 +21,16 @@ exports.showList = function(req,res,next){
 		}
 	})
 };
+
+
+//new
+exports.showNew = function(req,res,next){
+	res.render('backend/sortMgr/new',{
+		error:req.flash('error').toString(),
+		success:req.flash('success').toString(),
+		isBack:true,
+		topic:{
+			title:'增加筛选分类 - 筛选管理 - 后台管理 - ' + config.description
+		}
+	})
+};

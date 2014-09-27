@@ -24,4 +24,4 @@ exports.encrypt = function(str, secret) {
 	var enc = cipher.update(str, 'utf8', 'hex');
 	enc += cipher.final('hex');
 	return enc;
-}
+};

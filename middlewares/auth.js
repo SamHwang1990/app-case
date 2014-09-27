@@ -20,4 +20,4 @@ exports.signoutRequired = function(req,res,next){
     }
     req.flash('error','使用该功能需要登出系统。');
     res.render('notify/notify', {error:req.flash('error')});
-}
+};
