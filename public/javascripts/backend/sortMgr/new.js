@@ -66,14 +66,14 @@
 	};
 	var updateSuccessCallout = function(successMsg){
 		resetCallout();
-		$('.ac_callout_info p').text("成功：" + successMsg);
+		$('.ac_callout_info').removeClass('hidden').find('p').text("成功：" + successMsg);
 		setTimeout(function(){
 			resetCallout();
 		},3000)
 	};
 	var updateErrorCallout = function(errMsg){
 		resetCallout();
-		$('.ac_callout_danger p').text("错误：" + errMsg);
+		$('.ac_callout_danger').removeClass('hidden').find('p').text("错误：" + errMsg);
 		setTimeout(function(){
 			resetCallout();
 		},3000)
