@@ -23,7 +23,7 @@ exports.getSortById = function(id, callback){
  * @param {Function} callback 回调函数
  */
 exports.getEduTypeByName = function(name, callback){
-	Sort.findOne({name:name, grade:0},callback);
+	Sort.findOne({name:name, grade:0},{_id:1,name:1,slug:1},callback);
 };
 
 exports.newAndSaveEduType = function(name, slug, description, remark, callback){
@@ -37,4 +37,43 @@ exports.newAndSaveEduType = function(name, slug, description, remark, callback){
 	eduType.parent_id = null;
 
 	eduType.save(callback);
+};
+
+/**
+ * 查找所有EduType列表
+ * Callback:
+ * - err, 数据库异常
+ * - types, EduType
+ * @param {Function} callback 回调函数
+ */
+exports.getEduTypes = function(callback){
+	Sort.find({grade:0},callback);
+};
+
+/**
+ * 根据EduType_id查找EduType_Item列表
+ * Callback:
+ * - err, 数据库异常
+ * - items
+ * @param {Array} eduType_id
+ * @param {Function} callback 回调函数
+ */
+exports.getEduTypeItems = function(eduType_id,callback){
+	Sort.find({parent_id:eduType_id, grade:1},callback);
+};
+
+/**
+ * 根据EduType_Item_id查找EduType_Item_Option列表
+ * Callback:
+ * - err, 数据库异常
+ * - options
+ * @param {Array} item_id
+ * @param {Function} callback 回调函数
+ */
+exports.getEduTypeItemOptions = function(item_id,callback){
+	Sort.find({parent_id:item_id, grade:2}, callback);
+};
+
+exports.getEduTypeDetails = function(eduType_id,callback){
+
 };

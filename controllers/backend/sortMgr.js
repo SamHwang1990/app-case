@@ -13,13 +13,19 @@ var Sort = require('../../proxy').Sort;
 
 //list
 exports.showList = function(req,res,next){
-	res.render('backend/sortMgr/list',{
-		success:req.flash('success').toString(),
-		isBack:true,
-		topic:{
-			title:'筛选列表 - 筛选管理 - 后台管理 - ' + config.description
-		}
-	})
+	Sort.getEduTypes(function(err, types){
+		if(err)
+			return next(err);
+
+		res.render('backend/sortMgr/list',{
+			success:req.flash('success').toString(),
+			isBack:true,
+			eduTypes:types,
+			topic:{
+				title:'筛选列表 - 筛选管理 - 后台管理 - ' + config.description
+			}
+		})
+	});
 };
 
 
