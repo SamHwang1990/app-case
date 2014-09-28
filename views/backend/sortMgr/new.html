@@ -1,73 +1,53 @@
 <div class="container ac_b_wrapper">
-    <% if (typeof(error) !== 'undefined' && error) { %>
-    <div class="ac_callout ac_callout_danger">
-        <p>出错：<%= error %></p>
+    <div class="ac_callout ac_callout_danger hidden">
+        <p></p>
     </div>
-    <% } %>
-    <% if (typeof(success) !== 'undefined' && success) { %>
-    <div class="ac_callout ac_callout_info">
-        <p>成功：<%= success %></p>
+    <div class="ac_callout ac_callout_info hidden">
+        <p></p>
     </div>
-    <% } %>
     <div class="page-header">
         <h2>添加筛选类别</h2>
     </div>
 
-    <ul class="nav nav-tabs nav-justified" role="tablist">
+    <ul class="sort_edit_tabs nav nav-pills nav-justified" role="tablist">
         <li class="active">
-            <a href="#sort_eduType_detail" data-href="#eduType_sort" role="tab" data-toggle="tab">
-                留学类型分类
+            <a href="#sort_eduType" data-href="#sort_eduType" role="tab" data-toggle="tab">
+                留学类型信息
             </a>
         </li>
-        <li>
-            <a href="#sort_eduType" role="tab" data-toggle="tab">
-                留学类型信息
+        <li class="disabled">
+            <a data-href="#sort_eduType_detail" role="tab" data-toggle="">
+                留学类型分类
             </a>
         </li>
     </ul>
     <div class="tab-content padding-top-2">
-        <div class="tab-pane" id="sort_eduType">
+        <div class="tab-pane active" id="sort_eduType">
             <div class="row">
                 <div class="col-md-4">
-                    <form role="form" method="post">
+                    <form class="sort_eduType_editForm" action="/backend/SortMgr/NewEduType" role="form" method="post">
                         <div class="form-group">
-                            <label for="name">1. 留学类型名</label>
-                            <% if(typeof(name) !== 'undefined'){ %>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="留学类型名" value="<%= name %>" />
-                            <% }else { %>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="留学类型名" />
-                            <% } %>
+                            <label for="name">1. 留学类型中文名</label>
+                            <input type="text" class="form-control" name="name" placeholder="留学类型名" />
                         </div>
                         <div class="form-group">
                             <label for="slug">2. 留学类型英文名</label>
-                            <% if(typeof(slug) !== 'undefined'){ %>
-                            <input type="text" class="form-control" id="slug" name="slug" placeholder="留学类型英文名" value="<%= slug %>" />
-                            <% }else { %>
-                            <input type="text" class="form-control" id="slug" name="slug" placeholder="留学类型英文名" />
-                            <% } %>
+                            <input type="text" class="form-control" name="slug" placeholder="留学类型英文名" />
                         </div>
                         <div class="form-group">
                             <label for="description" >3. 留学类型描述</label>
-                            <% if(typeof(slug) !== 'undefined'){ %>
-                            <input type="text" class="form-control" id="description" name="description" placeholder="留学类型描述，前台展示所用" value="<%= slug %>" />
-                            <% }else { %>
-                            <input type="text" class="form-control" id="description" name="description" placeholder="留学类型描述，前台展示所用" />
-                            <% } %>
+                            <input type="text" class="form-control" name="description" placeholder="留学类型描述，前台展示所用" />
                         </div>
                         <div class="form-group">
                             <label for="remark" >4. 留学类型备注</label>
-                            <% if(typeof(remark) !== 'undefined'){ %>
-                            <textarea class="form-control" id="remark" name="remark" placeholder="留学类型备注，管理人员所用"><%= remark %></textarea>
-                            <% }else { %>
-                            <textarea class="form-control" id="remark" name="remark" placeholder="留学类型备注，管理人员所用"></textarea>
-                            <% } %>
+                            <textarea class="form-control" name="remark" placeholder="留学类型备注，管理人员所用"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg">提交</button>
+                        <button type="submit" class="btn btn-primary btn-lg">保存</button>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="tab-pane active" id="sort_eduType_detail">
+        <div class="tab-pane" id="sort_eduType_detail">
             <div class="ac_sortmgr_list" >
                 <div class="sort_eduType_item ac_sortItem"
                      data-id="doubi"

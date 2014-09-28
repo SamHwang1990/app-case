@@ -12,20 +12,20 @@
 		'<form role="form" class="sort_editForm" method="post"> ' +
 		'<div class="form-group"> ' +
 		'<label for="name">1. 留学类型名</label>' +
-		'<input type="hidden" class="form-control" id="sort_id" name="sort_id" value="'+ sortId + '" />' +
-		'<input type="text" class="form-control" id="name" name="name" placeholder="留学类型名" value="'+ name + '" />' +
+		'<input type="hidden" class="form-control" name="sort_id" value="'+ sortId + '" />' +
+		'<input type="text" class="form-control" name="name" placeholder="留学类型名" value="'+ name + '" />' +
 		'</div> ' +
 		'<div class="form-group"> ' +
 		'<label for="slug">2. 留学类型英文名</label>' +
-		'<input type="text" class="form-control" id="slug" name="slug" placeholder="留学类型英文名" value="'+ slug + '" />' +
+		'<input type="text" class="form-control" name="slug" placeholder="留学类型英文名" value="'+ slug + '" />' +
 		'</div> ' +
 		'<div class="form-group"> ' +
 		'<label for="description">3. 留学类型描述</label>' +
-		'<input type="text" class="form-control" id="description" name="description" placeholder="留学类型描述，前台展示所用" value="'+ description + '" />' +
+		'<input type="text" class="form-control" name="description" placeholder="留学类型描述，前台展示所用" value="'+ description + '" />' +
 		'</div> ' +
 		'<div class="form-group"> ' +
 		'<label for="remark">4. 留学类型备注</label>' +
-		'<textarea class="form-control" id="remark" name="remark" placeholder="留学类型备注，管理人员所用">'+ remark + '</textarea>' +
+		'<textarea class="form-control" name="remark" placeholder="留学类型备注，管理人员所用">'+ remark + '</textarea>' +
 		'</div> ' +
 		'</form> </div>  </div>';
 		return message
@@ -40,6 +40,43 @@
 			grade:wrapEl.attr('data-grade'),
 			remark:wrapEl.attr('data-remark')
 		}
+	};
+
+	var toggleNavTab = function(){
+		var tabs = $(".sort_edit_tabs");
+		var tabEduType = tabs.find('[data-href="#sort_eduType"]');
+		var tabEduTypeDetail = tabs.find('[data-href="#sort_eduType_detail"]');
+
+		var tabPaneEduType = $('#sort_eduType');
+		var tabPaneEduTypeDatail = $('#sort_eduType_detail');
+
+		tabEduType.parent('li').removeClass('active').addClass('disabled');
+		tabEduType.removeAttr('href').attr('data-toggle','');
+		tabPaneEduType.removeClass('active');
+
+		tabEduTypeDetail.parent('li').removeClass('disabled').addClass('active');
+		tabEduTypeDetail.attr('href',tabEduTypeDetail.attr('data-href')).attr('data-toggle','tab');
+		tabPaneEduTypeDatail.addClass('active');
+	};
+
+	var resetCallout = function(){
+		var $acCallout = $('.ac_callout');
+		$acCallout.addClass('hidden');
+		$acCallout.find('p').text('');
+	};
+	var updateSuccessCallout = function(successMsg){
+		resetCallout();
+		$('.ac_callout_info p').text("成功：" + successMsg);
+		setTimeout(function(){
+			resetCallout();
+		},3000)
+	};
+	var updateErrorCallout = function(errMsg){
+		resetCallout();
+		$('.ac_callout_danger p').text("错误：" + errMsg);
+		setTimeout(function(){
+			resetCallout();
+		},3000)
 	};
 
 	//处理删除Sort的box
@@ -165,6 +202,42 @@
 			var optionGrade = $optionEl.attr('data-grade');
 			deleteBox($optionEl,'',optionId,optionGrade);
 		});
+
+		//sort_eduType_editForm submit event bind
+		$('.sort_eduType_editForm').on('submit',function(event){
+			event.preventDefault();
+			var ajaxUrl = $(this).attr('action');
+			var name = $(this).find('input[name="name"]').val();
+			var slug = $(this).find('input[name="slug"]').val();
+			var description = $(this).find('input[name="description"]').val();
+			var remark = $(this).find('textarea[name="remark"]').val();
+
+			var ajaxData = {
+				name:name,
+				slug:slug,
+				description:description,
+				remark:remark
+			};
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxUrl,
+				data: JSON.stringify(ajaxData),
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				success: function (data) {
+					if(data.SaveResult){
+						updateSuccessCallout(data.SuccessMsg);
+						toggleNavTab();
+					}else{
+						updateErrorCallout(data.ErrorMsg);
+					}
+				},
+				error: function (data) {
+					alert('提交数据失败');
+				}
+			})
+		})
 	})
 
 })();

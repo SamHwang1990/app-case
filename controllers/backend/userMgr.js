@@ -204,7 +204,6 @@ exports.new = function(req, res, next){
 			topic:{
 				title:'添加用户 - 用户管理 - 后台管理 - ' + config.description
 			},
-			error: req.flash('error').toString(),
 			name: name,
 			email: email,
 			name_en:name_en});
