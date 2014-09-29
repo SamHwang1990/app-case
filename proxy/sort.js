@@ -75,5 +75,47 @@ exports.getEduTypeItemOptions = function(item_id,callback){
 };
 
 exports.getEduTypeDetails = function(eduType_id,callback){
+	var mapReduceObject = {};
+	var eduTypeItemMap = function(){
+		emit(this._id, {EduTypeItem:this, EduTypeItemOption:null});
+	};
+	var eduTypeItemQuery = {
+		"parent_id":eduType_id,
+		'grade':1
+	};
+	var eduTypeItemOptionMap = function(){
+		emit(this.parent_id, {EduTypeItem:null, EduTypeItemOption:this});
+	};
+	var eduTypeDetailsReduce = function(k, vals){
+		var result = {EduTypeItem:null, EduTypeItemOptions:[]};
+		vals.forEach(function(value){
+			if(result.EduTypeItem === null && value.EduTypeItem !== null){
+				result.EduTypeItem = value.EduTypeItem;
+			}
 
+			if(value.EduTypeItemOption !== null){
+				result.EduTypeItemOptions.push(value.EduTypeItemOption);
+			}
+		})
+		return result;
+	};
+
+	mapReduceObject.map = eduTypeItemMap;
+	mapReduceObject.reduce = eduTypeDetailsReduce;
+	mapReduceObject.options = {
+		out:{
+			reduce:'reduce_SortEduTypeDetails'
+		},
+		query:eduTypeItemQuery
+	};
+
+	Sort.mapReduce(mapReduceObject,function(err, itemResults){
+		var eduTypeItemOptionQuery = {
+			"parent_id":itemResults[0]._id,
+			'grade':2
+		};
+		mapReduceObject.map = eduTypeItemOptionMap;
+		mapReduceObject.options.query = eduTypeItemOptionQuery;
+		Sort.mapReduce(mapReduceObject,callback);
+	})
 };

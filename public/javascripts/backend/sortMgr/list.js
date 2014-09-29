@@ -4,7 +4,7 @@
 (function(){
 
 	var buildTabContent = function($wrapEl, detailDatas){
-
+		$wrapEl.text("dj");
 	};
 
 	var initListContent = function(){
@@ -77,6 +77,10 @@
 	};
 
 	var clickTypeRemoveLink = function(event){
+
+	};
+
+	var clickTypeEditLink = function(event){
 
 	};
 
