@@ -5,6 +5,8 @@
 
 	var buildTabContent = function($wrapEl, detailDatas){
 		$wrapEl.text("dj");
+		console.log(detailDatas);
+		JSON.stringify(detailDatas);
 	};
 
 	var initListContent = function(){
@@ -57,14 +59,14 @@
 	var clickTypeShowLink = function(event){
 		var typeSlug = $(this).attr('href').slice(1);
 		var $typeTabPane = $('#' + typeSlug);
-		var typeName = $(this).attr('data-name');
+		var typeId = $(this).attr('data-id');
 
 		//$(".ac_sortmgr_list").removeClass('active');
 		//typeTabPane.addClass('active');
 
 		$.ajax({
 			type: 'GET',
-			url: '/backend/SortMgr/EduTypeDetails/' + typeName,
+			url: '/backend/SortMgr/EduTypeDetails/' + typeId,
 			dataType: 'json',
 			contentType: 'application/json; charset=utf-8',
 			success: function (data) {
@@ -83,6 +85,10 @@
 	var clickTypeEditLink = function(event){
 
 	};
+
+	$(function(){
+		$('a.eduType_show').on("click",clickTypeShowLink);
+	})
 
 
 })();

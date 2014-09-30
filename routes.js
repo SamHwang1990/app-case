@@ -57,6 +57,10 @@ module.exports = function(app,express){
 		.get(backend.SortMgr.showNew);
 	backend_router.route(['/SortMgr/NewEduType'])
 		.post(backend.SortMgr.newEduType);
+	backend_router.route(['/SortMgr/EduTypeDetails/:typeId'])
+		.get(backend.SortMgr.showEduTypeDetails);
+	backend_router.route(['/SortMgr/Edit/:typeId'])
+		.get(backend.SortMgr.showEditEduType);
 
 
 	//endregion

@@ -20,7 +20,7 @@
                 <%= eduTypes[i].name %> <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a class="eduType_show" data-name="<%= eduTypes[i].name %>" href="#<%= eduTypes[i].slug %>" role="tab" data-toggle="tab">查看</a></li>
+                <li><a class="eduType_show" data-id="<%= eduTypes[i]._id %>" href="#<%= eduTypes[i].slug %>" role="tab" data-toggle="tab">查看</a></li>
                 <li class="divider"></li>
                 <li><a class="eduType_edit" href="/backend/SortMgr/Edit/<%= eduTypes[i]._id %>">编辑</a></li>
                 <li class="divider"></li>

@@ -27,6 +27,16 @@ exports.showList = function(req,res,next){
 		})
 	});
 };
+exports.showEduTypeDetails = function(req,res,next){
+	var eduTypeId = req.params.typeId;
+	eduTypeId = validator.trim(eduTypeId);
+	Sort.getEduTypeDetails(eduTypeId,function(err,details){
+		if(err)
+			return next(err);
+		console.log(typeof(details));
+		res.json(details);
+	});
+};
 
 
 //new
@@ -82,17 +92,20 @@ exports.newEduType = function(req,res,next){
 		});
 		return;
 	}
-
-	Sort.getEduTypeByName(name, function(err, eduType){
+	Sort.getSortsByQuery({
+		grade:0,
+		$or:[
+			{name:name},
+			{slug:slug}
+		]
+	},{},function(err, eduTypes){
 		if(err)
 			return next(err);
-
-		if(eduType !== null){
-			res.json({
+		if(eduTypes.length > 0){
+			return res.json({
 				SaveResult:false,
-				ErrorMsg:'留学类型名已被占用。'
+				ErrorMsg:'留学类型名或英文名已被占用。'
 			});
-			return;
 		}
 
 		Sort.newAndSaveEduType(name, slug, description, remark, function(err, sort){
@@ -105,4 +118,27 @@ exports.newEduType = function(req,res,next){
 			return;
 		});
 	});
+};
+
+//edit
+exports.showEditEduType = function(req,res,next){
+	var eduTypeId = req.params.typeId;
+	eduTypeId = validator.trim(eduTypeId);
+
+	Sort.getSortById(eduTypeId,function(err,sort){
+		res.render('backend/sortMgr/edit',{
+			error:req.flash('error').toString(),
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'编辑筛选分类 - 筛选管理 - 后台管理 - ' + config.description
+			},
+			_id:sort._id,
+			name:sort.name,
+			slug:sort.slug,
+			description:sort.description,
+			remark:sort.remark
+		})
+	});
+
 };

@@ -19,11 +19,36 @@ exports.getSortById = function(id, callback){
  * Callback:
  * - err, 数据库异常
  * - sort, 分类
- * @param {String} id EduType中文名
+ * @param {String} name EduType中文名
  * @param {Function} callback 回调函数
  */
 exports.getEduTypeByName = function(name, callback){
 	Sort.findOne({name:name, grade:0},{_id:1,name:1,slug:1},callback);
+};
+
+/**
+ * 根据EduType英文名，查找分类信息
+ * Callback:
+ * - err, 数据库异常
+ * - sort, 分类
+ * @param {String} slug EduType英文名
+ * @param {Function} callback 回调函数
+ */
+exports.getEduTypeBySlug = function(slug,callback){
+	Sort.findOne({slug:slug, grade:0},{_id:1,name:1,slug:1},callback);
+};
+
+/**
+ * 根据关键字，获取一组用户
+ * Callback:
+ * - err, 数据库异常
+ * - users, 用户列表
+ * @param {String} query 关键字
+ * @param {Object} opt 选项
+ * @param {Function} callback 回调函数
+ */
+exports.getSortsByQuery = function (query, opt, callback) {
+	Sort.find(query, {}, opt, callback);
 };
 
 exports.newAndSaveEduType = function(name, slug, description, remark, callback){
@@ -80,8 +105,8 @@ exports.getEduTypeDetails = function(eduType_id,callback){
 		emit(this._id, {EduTypeItem:this, EduTypeItemOption:null});
 	};
 	var eduTypeItemQuery = {
-		"parent_id":eduType_id,
-		'grade':1
+		parent_id:eduType_id,
+		grade:1
 	};
 	var eduTypeItemOptionMap = function(){
 		emit(this.parent_id, {EduTypeItem:null, EduTypeItemOption:this});
@@ -96,26 +121,31 @@ exports.getEduTypeDetails = function(eduType_id,callback){
 			if(value.EduTypeItemOption !== null){
 				result.EduTypeItemOptions.push(value.EduTypeItemOption);
 			}
-		})
+		});
 		return result;
 	};
 
 	mapReduceObject.map = eduTypeItemMap;
 	mapReduceObject.reduce = eduTypeDetailsReduce;
-	mapReduceObject.options = {
-		out:{
-			reduce:'reduce_SortEduTypeDetails'
-		},
-		query:eduTypeItemQuery
+	mapReduceObject.out = {
+		//reduce:'reduce_SortEduTypeDetails',
+		inline:1
 	};
+	mapReduceObject.query = eduTypeItemQuery;
 
-	Sort.mapReduce(mapReduceObject,function(err, itemResults){
+	Sort.mapReduce(mapReduceObject,function(err,itemResults) {
+		if (err) {
+			return callback(err, null);
+		}
+		if(typeof(itemResults) === 'undefined' || itemResults === null || itemResults.length <= 0)
+			return callback(null, null);
+
 		var eduTypeItemOptionQuery = {
-			"parent_id":itemResults[0]._id,
-			'grade':2
+			parent_id:itemResults[0]._id,
+			grade:2
 		};
 		mapReduceObject.map = eduTypeItemOptionMap;
-		mapReduceObject.options.query = eduTypeItemOptionQuery;
+		mapReduceObject.query = eduTypeItemOptionQuery;
 		Sort.mapReduce(mapReduceObject,callback);
-	})
+	});
 };
