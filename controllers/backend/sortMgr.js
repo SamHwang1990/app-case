@@ -306,11 +306,21 @@ exports.editEduType = function(req,res,next){
 			sort.save(function(err){
 				if(err)
 					return next(err);
-				res.json({
-					SaveResult:true,
-					SuccessMsg:'留学类型保存成功。'
+				Sort.updateAncestor({
+					_id:sort._id,
+					name:name,
+					slug:slug,
+					description:description,
+					remark:remark
+				},function(err,numberAffected){
+					if(err)
+						return next(err);
+
+					return res.json({
+						SaveResult:true,
+						SuccessMsg:'留学类型保存成功。'
+					});
 				});
-				return;
 			});
 		})
 	})
@@ -393,11 +403,22 @@ exports.editEduTypeItemOrOption = function(req,res,next){
 			sort.save(function(err){
 				if(err)
 					return next(err);
-				res.json({
-					SaveResult:true,
-					SuccessMsg:'数据保存成功。'
+
+				Sort.updateAncestor({
+					_id:sort._id,
+					name:name,
+					slug:slug,
+					description:description,
+					remark:remark
+				},function(err,numberAffected){
+					if(err)
+						return next(err);
+
+					return res.json({
+						SaveResult:true,
+						SuccessMsg:'留学类型保存成功。'
+					});
 				});
-				return;
 			});
 		})
 	})

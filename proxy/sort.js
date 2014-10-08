@@ -177,3 +177,7 @@ exports.getEduTypeDetails = function(eduType_id,callback){
 		callback(null, detailResults);
 	});
 };
+
+exports.updateAncestor = function(newAncestor,callback){
+	Sort.update({'ancestors._id':newAncestor._id},{$set:{'ancestors.$':newAncestor}},{ multi: true },callback);
+}
