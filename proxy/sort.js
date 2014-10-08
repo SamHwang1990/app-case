@@ -153,7 +153,7 @@ exports.getEduTypeDetails = function(eduType_id,callback){
 				if(err)
 					return callback(err, null);
 				result.EduTypeItemOptions.push(options);
-			})
+			});
 
 		});
 		return result;

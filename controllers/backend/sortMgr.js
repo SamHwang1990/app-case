@@ -184,7 +184,7 @@ exports.newEduTypeItemOrOption = function(req,res,next){
 		if(items.length > 0){
 			return res.json({
 				SaveResult:false,
-				ErrorMsg:'分类名或英文名已被占用。'
+				ErrorMsg:'中文名或英文名已被占用。'
 			});
 		}
 
@@ -315,4 +315,90 @@ exports.editEduType = function(req,res,next){
 		})
 	})
 
+};
+exports.editEduTypeItemOrOption = function(req,res,next){
+	var sortId = req.body.sortId;
+	var name = validator.trim(req.body.name);
+	name = sanitizer.sanitize(name);
+	var slug = validator.trim(req.body.slug);
+	slug = sanitizer.sanitize(slug);
+	var description = validator.trim(req.body.description);
+	description = sanitizer.sanitize(description);
+	var remark = validator.trim(req.body.remark);
+	remark = sanitizer.sanitize(remark);
+
+	if (sortId === '' || name === '' || slug === '') {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'信息不完整。'
+		});
+		return;
+	}
+
+	if (name.length < 1) {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型名至少需要1个字符。'
+		});
+		return;
+	}
+
+	if (slug.length < 1) {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型英文名至少需要1个字符。'
+		});
+		return;
+	}
+
+	if(!validator.isAlphanumeric(slug)){
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型英文名只能使用0-9，a-z，A-Z。'
+		});
+		return;
+	}
+
+	Sort.getSortById(sortId,function(err,sort){
+		if(err)
+			return next(err);
+
+		if(sort === null)
+			return res.json({
+				SaveResult:false,
+				ErrorMsg:'所提交信息有误，请刷新页面，重新提交！'
+			});
+
+		Sort.getSortsByQuery({
+			_id:{$ne:sortId},
+			grade:sort.grade,
+			parent_id:sort.parent_id,
+			$or:[
+				{name:name},
+				{slug:slug}
+			]
+		},{},function(err,sorts){
+			if(sorts.length > 0){
+				return res.json({
+					SaveResult:false,
+					ErrorMsg:'中文名或英文名已被占用。'
+				});
+			}
+
+			sort.name = name;
+			sort.slug = slug;
+			sort.description = description;
+			sort.remark = remark;
+
+			sort.save(function(err){
+				if(err)
+					return next(err);
+				res.json({
+					SaveResult:true,
+					SuccessMsg:'数据保存成功。'
+				});
+				return;
+			});
+		})
+	})
 };

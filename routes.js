@@ -67,6 +67,8 @@ module.exports = function(app,express){
 
 	backend_router.route(['/SortMgr/EditEduType'])
 		.post(backend.SortMgr.editEduType);
+	backend_router.route(['/SortMgr/EditEduTypeItemOrOption'])
+		.post(backend.SortMgr.editEduTypeItemOrOption);
 
 
 	//endregion

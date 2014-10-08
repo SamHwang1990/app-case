@@ -129,36 +129,71 @@
 	};
 
 	//处理编辑Sort的box
-	var editBox = function($wrapEl, ajaxUrl){
-		var editData = genEditData($wrapEl);
+	var editBox = function($dataWrapEl,$wrapEl, ajaxUrl, sortId,eduTypeId){
+		var editData = genEditData($dataWrapEl);
 		bootbox.dialog({
 			className:'sort_edit_box',
 			message: genEditFormHtml(editData.id, editData.name, editData.slug, editData.description, editData.remark),
 			buttons: {
 				default: {
 					label: "No",
-					className: "btn-default",
-					callback: function() {
-						alert('cencel edit');
-					}
+					className: "btn-default"
 				},
 				primary: {
 					label: "Yes",
 					className: "btn-primary",
 					callback: function() {
-						alert('edit done');
-						if(editData.grade === '1'){
-							updateSortItemDom($wrapEl,editData);
-						}else if(editData.grade === '2'){
-							updateSortItemOptionDom($wrapEl,editData);
-						}
+						var $boxEl = $('.sort_edit_box').eq(0);
+						var name = $boxEl.find('input[name="name"]').val();
+						var slug = $boxEl.find('input[name="slug"]').val();
+						var description = $boxEl.find('input[name="description"]').val();
+						var remark = $boxEl.find('textarea[name="remark"]').val();
+
+						var ajaxData = {
+							sortId:sortId,
+							name:name,
+							slug:slug,
+							description:description,
+							remark:remark
+						};
+
+						$.ajax({
+							type: 'POST',
+							url: ajaxUrl,
+							data: JSON.stringify(ajaxData),
+							dataType: 'json',
+							contentType: 'application/json; charset=utf-8',
+							success: function (data) {
+								if(data.SaveResult){
+									updateSuccessCallout(data.SuccessMsg);
+									var insertData = {
+										sortId:sortId,
+										name:name,
+										slug:slug,
+										description:description,
+										remark:remark,
+										eduTypeId:eduTypeId
+									};
+									/*if(sortGrade === 1)
+										return insertSortItemDom($wrapEl,insertData);
+									if(sortGrade === 2)
+										return insertSortItemOptionDom($wrapEl, insertData);*/
+									updateEduTypeDetail($wrapEl, insertData);
+								}else{
+									updateErrorCallout(data.ErrorMsg);
+								}
+							},
+							error: function (data) {
+								alert('提交数据失败');
+							}
+						})
 					}
 				}
 			}
 		});
 	};
 
-	var newBox = function($wrapEl, ajaxUrl, parentId, sortGrade){
+	var newBox = function($wrapEl, ajaxUrl,eduTypeId, parentId, sortGrade){
 		bootbox.dialog({
 			className:'sort_new_box',
 			message: genNewFormHtml(parentId),
@@ -202,12 +237,14 @@
 										description:description,
 										remark:remark,
 										grade:sortGrade,
-										parentId:parentId
+										parentId:parentId,
+										eduTypeId:eduTypeId
 									};
-									if(sortGrade === 1)
+									/*if(sortGrade === 1)
 										return insertSortItemDom($wrapEl,insertData);
 									if(sortGrade === 2)
-										return insertSortItemOptionDom($wrapEl, insertData);
+										return insertSortItemOptionDom($wrapEl, insertData);*/
+									updateEduTypeDetail($wrapEl, insertData);
 								}else{
 									updateErrorCallout(data.ErrorMsg);
 								}
@@ -222,6 +259,10 @@
 		});
 	};
 
+	var updateEduTypeDetail = function($wrapEl,insertData){
+		loadEduTypeDetails(insertData.eduTypeId,$wrapEl)
+	};
+
 	//更新SortItem的Dom内容
 	var updateSortItemDom = function($wrapEl, updateData){
 		$wrapEl.find('.sort_eduType_item_name').text(updateData.name);
@@ -234,7 +275,7 @@
 
 	//插入新的SortItem
 	var insertSortItemDom = function($wrapEl,insertData){
-		$wrapEl.text(insertData.name);
+		loadEduTypeDetails(insertData.eduTypeId,$wrapEl)
 	};
 
 	//插入新的SortItem-Option
