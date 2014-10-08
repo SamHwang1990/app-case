@@ -5,6 +5,7 @@
 $(function(){
 	var buildEduTypeDetailsHtml = function($wrapEl, detailsData){
 		//$wrapEl.text("dj");
+		console.log(JSON.stringify(detailsData));
 		return $wrapEl.text("dj");
 	};
 
@@ -63,5 +64,15 @@ $(function(){
 				alert('提交数据失败');
 			}
 		})
+	});
+
+	//sort_eduType_item_add click event bind
+	$(".sort_eduType_item_add").on('click',function(event){
+		event.preventDefault();
+		var $eduTypeItemList = $(".ac_sortmgr_list");
+		var grade = 1;
+		var ajaxUrl = '/backend/SortMgr/NewEduTypeItemOrOption';
+		var parentId = $(this).attr('data-parentId');
+		newBox($eduTypeItemList,ajaxUrl,parentId,grade);
 	})
 });

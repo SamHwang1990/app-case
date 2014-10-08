@@ -4,6 +4,7 @@
 (function(){
 
 	var buildTabContent = function($wrapEl, detailDatas){
+		detailDatas
 		$wrapEl.text("dj");
 	};
 

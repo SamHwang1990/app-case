@@ -29,6 +29,32 @@
 		return message
 	};
 
+	var genNewFormHtml = function(parentId){
+		var message =
+			'<div class="row">  ' +
+			'<div class="col-md-12"> ' +
+			'<form role="form" class="sort_newForm" method="post"> ' +
+			'<div class="form-group"> ' +
+			'<label for="name">1. 留学类型名</label>' +
+			'<input type="hidden" class="form-control" name="parentId" value="'+ parentId + '" />' +
+			'<input type="text" class="form-control" name="name" placeholder="留学类型名" />' +
+			'</div> ' +
+			'<div class="form-group"> ' +
+			'<label for="slug">2. 留学类型英文名</label>' +
+			'<input type="text" class="form-control" name="slug" placeholder="留学类型英文名" />' +
+			'</div> ' +
+			'<div class="form-group"> ' +
+			'<label for="description">3. 留学类型描述</label>' +
+			'<input type="text" class="form-control" name="description" placeholder="留学类型描述，前台展示所用" />' +
+			'</div> ' +
+			'<div class="form-group"> ' +
+			'<label for="remark">4. 留学类型备注</label>' +
+			'<textarea class="form-control" name="remark" placeholder="留学类型备注，管理人员所用"></textarea>' +
+			'</div> ' +
+			'</form> </div>  </div>';
+		return message
+	};
+
 	var genEditData = function(wrapEl){
 		return {
 			id:wrapEl.attr('data-id'),
@@ -132,6 +158,70 @@
 		});
 	};
 
+	var newBox = function($wrapEl, ajaxUrl, parentId, sortGrade){
+		bootbox.dialog({
+			className:'sort_new_box',
+			message: genNewFormHtml(parentId),
+			buttons: {
+				default: {
+					label: "No",
+					className: "btn-default"
+				},
+				primary: {
+					label: "Yes",
+					className: "btn-primary",
+					callback: function() {
+						var $boxEl = $('.sort_new_box').eq(0);
+						var name = $boxEl.find('input[name="name"]').val();
+						var slug = $boxEl.find('input[name="slug"]').val();
+						var description = $boxEl.find('input[name="description"]').val();
+						var remark = $boxEl.find('textarea[name="remark"]').val();
+
+						var ajaxData = {
+							name:name,
+							slug:slug,
+							description:description,
+							remark:remark,
+							grade:sortGrade,
+							parentId:parentId
+						};
+
+						$.ajax({
+							type: 'POST',
+							url: ajaxUrl,
+							data: JSON.stringify(ajaxData),
+							dataType: 'json',
+							contentType: 'application/json; charset=utf-8',
+							success: function (data) {
+								if(data.SaveResult){
+									updateSuccessCallout(data.SuccessMsg);
+									var insertData = {
+										SortId:data.SortId,
+										name:name,
+										slug:slug,
+										description:description,
+										remark:remark,
+										grade:sortGrade,
+										parentId:parentId
+									};
+									if(sortGrade === 1)
+										return insertSortItemDom($wrapEl,insertData);
+									if(sortGrade === 2)
+										return insertSortItemOptionDom($wrapEl, insertData);
+								}else{
+									updateErrorCallout(data.ErrorMsg);
+								}
+							},
+							error: function (data) {
+								alert('提交数据失败');
+							}
+						})
+					}
+				}
+			}
+		});
+	};
+
 	//更新SortItem的Dom内容
 	var updateSortItemDom = function($wrapEl, updateData){
 		$wrapEl.find('.sort_eduType_item_name').text(updateData.name);
@@ -143,12 +233,12 @@
 	};
 
 	//插入新的SortItem
-	var insertSortItemDom = function(insertData){
-
+	var insertSortItemDom = function($wrapEl,insertData){
+		$wrapEl.text(insertData.name);
 	};
 
 	//插入新的SortItem-Option
-	var insertSortItemOptionDom = function(insertData){
+	var insertSortItemOptionDom = function($wrapEl,insertData){
 
 	};
 

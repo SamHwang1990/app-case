@@ -92,6 +92,7 @@ exports.newEduType = function(req,res,next){
 		});
 		return;
 	}
+
 	Sort.getSortsByQuery({
 		grade:0,
 		$or:[
@@ -118,6 +119,93 @@ exports.newEduType = function(req,res,next){
 			return;
 		});
 	});
+};
+exports.newEduTypeItemOrOption = function(req,res,next){
+	var name = validator.trim(req.body.name);
+	name = sanitizer.sanitize(name);
+	var slug = validator.trim(req.body.slug);
+	slug = sanitizer.sanitize(slug);
+	var description = validator.trim(req.body.description);
+	description = sanitizer.sanitize(description);
+	var remark = validator.trim(req.body.remark);
+	remark = sanitizer.sanitize(remark);
+	var parentId = validator.trim(req.body.parentId);
+	var grade = req.body.grade;
+
+	if (name === '' || slug === '') {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'信息不完整。'
+		});
+		return;
+	}
+
+	if (name.length < 1) {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型名至少需要1个字符。'
+		});
+		return;
+	}
+
+	if (slug.length < 1) {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型英文名至少需要1个字符。'
+		});
+		return;
+	}
+
+	if(!validator.isAlphanumeric(slug)){
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型英文名只能使用0-9，a-z，A-Z。'
+		});
+		return;
+	}
+
+	if(grade === 0){
+		return res.json({
+			SaveResult:false,
+			ErrorMsg:'分类创建失败，所提交信息有误，请刷新页面，重新提交！'
+		});
+	}
+
+	Sort.getSortsByQuery({
+		grade:1,
+		parent_id:parentId,
+		$or:[
+			{name:name},
+			{slug:slug}
+		]
+	},{},function(err, items){
+		if(err)
+			return next(err);
+		if(items.length > 0){
+			return res.json({
+				SaveResult:false,
+				ErrorMsg:'分类名或英文名已被占用。'
+			});
+		}
+
+		Sort.newAndSaveEduTypeItemOrOption(name,slug,grade,description,remark,parentId,function(err, eduTypeItem){
+			if(err)
+				return next(err);
+			if(eduTypeItem === null || typeof(eduTypeItem) === 'undefined')
+				return res.json({
+					SaveResult:false,
+					ErrorMsg:'分类创建失败，所提交信息有误，请刷新页面，重新提交！'
+				});
+
+			res.json({
+				SaveResult:true,
+				SuccessMsg:'分类创建成功。',
+				SortId:eduTypeItem._id
+			});
+			return;
+		})
+	})
+
 };
 
 //edit
