@@ -35,7 +35,7 @@ exports.getEduTypeByName = function(name, callback){
  * @param {Function} callback 回调函数
  */
 exports.getEduTypeBySlug = function(slug,callback){
-	Sort.findOne({slug:slug, grade:0},{_id:1,name:1,slug:1},callback);
+	Sort.findOne({slug:slug, grade:0},{},callback);
 };
 
 /**

@@ -5,8 +5,6 @@
 
 	var buildTabContent = function($wrapEl, detailDatas){
 		$wrapEl.text("dj");
-		console.log(detailDatas);
-		JSON.stringify(detailDatas);
 	};
 
 	var initListContent = function(){
@@ -88,6 +86,7 @@
 
 	$(function(){
 		$('a.eduType_show').on("click",clickTypeShowLink);
+		initListContent();
 	})
 
 

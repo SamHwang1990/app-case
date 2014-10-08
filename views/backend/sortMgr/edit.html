@@ -9,7 +9,7 @@
         <h2>编辑筛选类别</h2>
     </div>
 
-    <ul class="sort_edit_tabs nav nav-pills nav-justified" role="tablist">
+    <ul class="sort_edit_tabs nav nav-tabs nav-justified" role="tablist">
         <li class="active">
             <a href="#sort_eduType" data-href="#sort_eduType" role="tab" data-toggle="tab">
                 留学类型信息
@@ -25,7 +25,7 @@
         <div class="tab-pane active" id="sort_eduType">
             <div class="row">
                 <div class="col-md-4">
-                    <form class="sort_eduType_editForm" action="/backend/SortMgr/NewEduType" role="form" method="post">
+                    <form class="sort_eduType_editForm" action="/backend/SortMgr/EditEduType" role="form" method="post">
                         <% if(typeof(_id) !== 'undefined'){ %>
                         <input type="hidden" name="eduTypeId" value="<%= _id %>" />
                         <% } %>
@@ -139,19 +139,21 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <a type="button" class="sort_eduType_item_add btn btn-default btn-lg btn-block">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        添加新分类
-                    </a>
-                </div>
+            </div>
+            <br/>
+            <div>
+                <a type="button" class="sort_eduType_item_add btn btn-default btn-lg btn-block">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    添加新分类
+                </a>
             </div>
         </div>
     </div>
 </div>
 <!-- js -->
-<%- Loader('/public/backend/sortmgr_new.min.js')
+<%- Loader('/public/backend/sortmgr_edit.min.js')
 .js('/public/javascripts/libs/bootbox.min.js')
+.js('/public/javascripts/backend/sortMgr/assert.js')
 .js('/public/javascripts/backend/sortMgr/edit.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>

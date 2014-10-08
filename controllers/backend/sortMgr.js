@@ -142,3 +142,89 @@ exports.showEditEduType = function(req,res,next){
 	});
 
 };
+exports.editEduType = function(req,res,next){
+	var _id = validator.trim(req.body._id);
+	var name = validator.trim(req.body.name);
+	name = sanitizer.sanitize(name);
+	var slug = validator.trim(req.body.slug);
+	slug = sanitizer.sanitize(slug);
+	var description = validator.trim(req.body.description);
+	description = sanitizer.sanitize(description);
+	var remark = validator.trim(req.body.remark);
+	remark = sanitizer.sanitize(remark);
+
+	if (_id === '' || name === '' || slug === '') {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'信息不完整。'
+		});
+		return;
+	}
+
+	if (name.length < 1) {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型名至少需要1个字符。'
+		});
+		return;
+	}
+
+	if (slug.length < 1) {
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型英文名至少需要1个字符。'
+		});
+		return;
+	}
+
+	if(!validator.isAlphanumeric(slug)){
+		res.json({
+			SaveResult:false,
+			ErrorMsg:'留学类型英文名只能使用0-9，a-z，A-Z。'
+		});
+		return;
+	}
+
+	Sort.getSortById(_id,function(err,sort){
+		if(err)
+			return next(err);
+
+		if(sort === null || sort === undefined)
+			return res.json({
+				SaveResult:false,
+				ErrorMsg:'信息有错误，请刷新！'
+			});
+
+		Sort.getSortsByQuery({
+			_id:{$ne:_id},
+			grade:0,
+			$or:[
+				{name:name},
+				{slug:slug}
+			]
+		},{},function(err,sorts){
+			if(sorts.length > 0){
+				return res.json({
+					SaveResult:false,
+					ErrorMsg:'留学类型名或英文名已被占用。'
+				});
+			}
+
+			sort.name = name;
+			sort.slug = slug;
+			sort.description = description;
+			sort.remark = remark;
+
+			sort.save(function(err){
+				if(err)
+					return next(err);
+				res.json({
+					SaveResult:true,
+					SuccessMsg:'留学类型保存成功。'
+				});
+				return;
+			});
+		})
+	})
+
+};

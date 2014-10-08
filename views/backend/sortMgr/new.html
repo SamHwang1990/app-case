@@ -9,7 +9,7 @@
         <h2>添加筛选类别</h2>
     </div>
 
-    <ul class="sort_edit_tabs nav nav-pills nav-justified" role="tablist">
+    <ul class="sort_edit_tabs nav nav-tabs nav-justified" role="tablist">
         <li class="active">
             <a href="#sort_eduType" data-href="#sort_eduType" role="tab" data-toggle="tab">
                 留学类型信息
@@ -132,6 +132,7 @@
 <!-- js -->
 <%- Loader('/public/backend/sortmgr_new.min.js')
 .js('/public/javascripts/libs/bootbox.min.js')
+.js('/public/javascripts/backend/sortMgr/assert.js')
 .js('/public/javascripts/backend/sortMgr/new.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>
