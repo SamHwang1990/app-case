@@ -152,7 +152,11 @@ $(function(){
 		var $itemWrapEl = $(this).parents('.sort_eduType_item');
 		var ajaxUrl = '/backend/SortMgr/EditEduTypeItemOrOption';
 		var typeId = $eduTypeItemList.attr('data-eduTypeId');
-		var sortId = $(this).parents('.sort_eduType_item').attr('data-id');
+		var sortId = $itemWrapEl.attr('data-id');
 		editBox($itemWrapEl,$eduTypeItemList,ajaxUrl,sortId,typeId);
+	});
+
+	$('.ac_sortmgr_list').delegate('.sort_eduType_item_addOption','click',function(event){
+		event.preventDefault();
 	});
 });
