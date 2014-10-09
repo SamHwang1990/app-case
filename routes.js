@@ -70,6 +70,12 @@ module.exports = function(app,express){
 	backend_router.route(['/SortMgr/EditEduTypeItemOrOption'])
 		.post(backend.SortMgr.editEduTypeItemOrOption);
 
+	backend_router.route(['/SortMgr/removeEduTypeItemOption'])
+		.post(backend.SortMgr.removeEduTypeItemOption);
+	backend_router.route(['/SortMgr/removeEduTypeItem'])
+		.post(backend.SortMgr.removeEduTypeItem);
+	backend_router.route(['/SortMgr/removeEduType'])
+		.post(backend.SortMgr.removeEduType);
 
 	//endregion
 };

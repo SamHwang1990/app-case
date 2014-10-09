@@ -143,7 +143,7 @@ exports.newEduTypeItemOrOption = function(req,res,next){
 	if (name.length < 1) {
 		res.json({
 			SaveResult:false,
-			ErrorMsg:'留学类型名至少需要1个字符。'
+			ErrorMsg:'中文名至少需要1个字符。'
 		});
 		return;
 	}
@@ -151,7 +151,7 @@ exports.newEduTypeItemOrOption = function(req,res,next){
 	if (slug.length < 1) {
 		res.json({
 			SaveResult:false,
-			ErrorMsg:'留学类型英文名至少需要1个字符。'
+			ErrorMsg:'英文名至少需要1个字符。'
 		});
 		return;
 	}
@@ -159,7 +159,7 @@ exports.newEduTypeItemOrOption = function(req,res,next){
 	if(!validator.isAlphanumeric(slug)){
 		res.json({
 			SaveResult:false,
-			ErrorMsg:'留学类型英文名只能使用0-9，a-z，A-Z。'
+			ErrorMsg:'英文名只能使用0-9，a-z，A-Z。'
 		});
 		return;
 	}
@@ -172,7 +172,7 @@ exports.newEduTypeItemOrOption = function(req,res,next){
 	}
 
 	Sort.getSortsByQuery({
-		grade:1,
+		grade:grade,
 		parent_id:parentId,
 		$or:[
 			{name:name},
@@ -197,9 +197,10 @@ exports.newEduTypeItemOrOption = function(req,res,next){
 					ErrorMsg:'分类创建失败，所提交信息有误，请刷新页面，重新提交！'
 				});
 
+			var msgPrefix = grade == 1?'筛选分类':'分类选项';
 			res.json({
 				SaveResult:true,
-				SuccessMsg:'分类创建成功。',
+				SuccessMsg:msgPrefix + '创建成功。',
 				SortId:eduTypeItem._id
 			});
 			return;
@@ -311,7 +312,8 @@ exports.editEduType = function(req,res,next){
 					name:name,
 					slug:slug,
 					description:description,
-					remark:remark
+					remark:remark,
+					grade:sort.grade
 				},function(err,numberAffected){
 					if(err)
 						return next(err);
@@ -348,7 +350,7 @@ exports.editEduTypeItemOrOption = function(req,res,next){
 	if (name.length < 1) {
 		res.json({
 			SaveResult:false,
-			ErrorMsg:'留学类型名至少需要1个字符。'
+			ErrorMsg:'中文名至少需要1个字符。'
 		});
 		return;
 	}
@@ -356,7 +358,7 @@ exports.editEduTypeItemOrOption = function(req,res,next){
 	if (slug.length < 1) {
 		res.json({
 			SaveResult:false,
-			ErrorMsg:'留学类型英文名至少需要1个字符。'
+			ErrorMsg:'英文名至少需要1个字符。'
 		});
 		return;
 	}
@@ -364,7 +366,7 @@ exports.editEduTypeItemOrOption = function(req,res,next){
 	if(!validator.isAlphanumeric(slug)){
 		res.json({
 			SaveResult:false,
-			ErrorMsg:'留学类型英文名只能使用0-9，a-z，A-Z。'
+			ErrorMsg:'英文名只能使用0-9，a-z，A-Z。'
 		});
 		return;
 	}
@@ -409,17 +411,57 @@ exports.editEduTypeItemOrOption = function(req,res,next){
 					name:name,
 					slug:slug,
 					description:description,
-					remark:remark
+					remark:remark,
+					grade:sort.grade
 				},function(err,numberAffected){
 					if(err)
 						return next(err);
 
+					var msgPrefix = sort.grade == 1?'筛选分类':'分类选项';
 					return res.json({
 						SaveResult:true,
-						SuccessMsg:'留学类型保存成功。'
+						SuccessMsg:msgPrefix + '保存成功。'
 					});
 				});
 			});
 		})
 	})
+};
+
+//remove
+exports.removeEduType = function(req,res,next){
+	var typeId = validator.trim(req.body.sortId);
+	Sort.removeEduType(typeId,function(err, removeResult){
+		if(err)
+			return next(err);
+
+		return res.json({
+			RemoveResult:true,
+			SuccessMsg:'留学类型删除成功。'
+		});
+	});
+};
+exports.removeEduTypeItem = function(req,res,next){
+	var itemId = validator.trim(req.body.sortId);
+	Sort.removeEduTypeItem(itemId,function(err, removeResult){
+		if(err)
+			return next(err);
+
+		return res.json({
+			RemoveResult:true,
+			SuccessMsg:'筛选分类删除成功。'
+		});
+	});
+};
+exports.removeEduTypeItemOption = function(req,res,next){
+	var optionId = validator.trim(req.body.sortId);
+	Sort.removeEduTypeItemOption(optionId,function(err, removeResult){
+		if(err)
+			return next(err);
+
+		return res.json({
+			RemoveResult:true,
+			SuccessMsg:'分类选项删除成功。'
+		});
+	});
 };

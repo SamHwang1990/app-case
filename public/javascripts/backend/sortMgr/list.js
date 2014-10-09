@@ -6,9 +6,10 @@
 	var buildTabContent = function($wrapEl, detailsData){
 		var outputHtml = '';
 		var message = '';
+		console.log(JSON.stringify(detailsData));
 		_.forEach(detailsData, function(detailValue){
-			var detailItem = detailValue.value.EduTypeItem;
-			var detailItemOptions = detailValue.value.EduTypeItemOption;
+			var detailItem = detailValue.EduTypeItem;
+			var detailItemOptions = detailValue.EduTypeItemOptions;
 			message =
 				'<div class="sort_eduType_item ac_sortItem" >' +
 				'<div class="row">' +
@@ -37,7 +38,7 @@
 				'<div class="col-sm-6" >' +
 					'<section class="cell-row">' +
 						'<section class="cell-row-col cell-row-description">' +
-						optionData.name +
+						optionData.name + '&nbsp;(' + optionData.slug + ')' +
 						'</section>' +
 					'</section>' +
 				'</div>';
@@ -49,8 +50,10 @@
 
 	var initListContent = function(){
 		var $sortTabs = $("#sort_list_tabs");
-		if($sortTabs.length <= 0)
+		if($sortTabs.length <= 0 || $sortTabs.find('li.dropdown').size() <= 0) {
+			$('.sortList_blank').removeClass('hidden');
 			return;
+		}
 
 		var firstLi = $sortTabs.find('li.dropdown').eq(0);
 		firstLi.addClass('active');
@@ -60,29 +63,43 @@
 	};
 
 	//处理删除Sort的box
-	var deleteBox = function($wrapEl, ajaxUrl){
+	var typeDeleteBox = function(ajaxUrl, sortId, $dropdownLi, $tapPanel){
 		bootbox.dialog({
 			className:'sort_delete_box',
 			message: "Are you sure?",
 			buttons: {
 				default: {
 					label: "No",
-					className: "btn-default",
-					callback: function() {
-						alert('oh no, i don\'t want to delete!');
-					}
+					className: "btn-default"
 				},
 				danger: {
 					label: "Yes",
 					className: "btn-danger",
 					callback: function() {
-						/*
-						* ToDo: DeleteBox
-						* after delete doc in db,
-						* the tab and tabPanel dom shall remove from document,
-						* and if the rest tab length is 0, remove ui.sort_list_tabs and div.tab-content from document, and show h3.sortList_blank
-						* if the rest tab length is bigger than 0, and the index of removed tab is not 0, nothing else, otherwise, initListContent again
-						* */
+						var ajaxData = {
+							sortId:sortId
+						};
+
+						$.ajax({
+							type: 'POST',
+							url: ajaxUrl,
+							data: JSON.stringify(ajaxData),
+							dataType: 'json',
+							contentType: 'application/json; charset=utf-8',
+							success: function (data) {
+								if(data.RemoveResult){
+									updateSuccessCallout(data.SuccessMsg);
+									$dropdownLi.remove();
+									$tapPanel.remove();
+									initListContent();
+								}else{
+									updateErrorCallout(data.ErrorMsg);
+								}
+							},
+							error: function (data) {
+								alert('提交数据失败');
+							}
+						})
 					}
 				}
 			}
@@ -120,15 +137,18 @@
 	};
 
 	var clickTypeRemoveLink = function(event){
-
-	};
-
-	var clickTypeEditLink = function(event){
-
+		event.preventDefault();
+		var typeId = $(this).attr('data-id');
+		var ajaxUrl = $(this).attr('href');
+		var slug = $(this).attr('data-slug');
+		var $dropdownLi = $(this).parents('li.dropdown');
+		var $tapPanel = $("#"+ slug);
+		typeDeleteBox(ajaxUrl,typeId,$dropdownLi,$tapPanel);
 	};
 
 	$(function(){
 		$('a.eduType_show').on("click",clickTypeShowLink);
+		$('a.eduType_remove').on('click',clickTypeRemoveLink);
 		initListContent();
 	})
 

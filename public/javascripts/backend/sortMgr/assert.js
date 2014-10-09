@@ -120,24 +120,44 @@ var updateErrorCallout = function(errMsg){
 };
 
 //处理删除Sort的box
-var deleteBox = function($wrapEl, ajaxUrl, sortId, sortGrade){
+var deleteBox = function($wrapEl, ajaxUrl, sortId, eduTypeId){
 	bootbox.dialog({
 		className:'sort_delete_box',
 		message: "Are you sure?",
 		buttons: {
 			default: {
 				label: "No",
-				className: "btn-default",
-				callback: function() {
-					alert('oh no, i don\'t want to delete!');
-				}
+				className: "btn-default"
 			},
 			danger: {
 				label: "Yes",
 				className: "btn-danger",
 				callback: function() {
-					alert('yes, i want to delete!/n SortId: ' + sortId + ', SortGrade: ' + sortGrade);
-					$wrapEl.remove();
+					var ajaxData = {
+						sortId:sortId
+					};
+
+					$.ajax({
+						type: 'POST',
+						url: ajaxUrl,
+						data: JSON.stringify(ajaxData),
+						dataType: 'json',
+						contentType: 'application/json; charset=utf-8',
+						success: function (data) {
+							if(data.RemoveResult){
+								updateSuccessCallout(data.SuccessMsg);
+								var insertData = {
+									eduTypeId:eduTypeId
+								};
+								updateEduTypeDetail($wrapEl, insertData);
+							}else{
+								updateErrorCallout(data.ErrorMsg);
+							}
+						},
+						error: function (data) {
+							alert('提交数据失败');
+						}
+					})
 				}
 			}
 		}

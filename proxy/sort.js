@@ -1,6 +1,11 @@
+var mongoose = require('mongoose');
 var models = require('../models');
 var Sort = models.Sort;
+var Student = models.Student;
+
 var utility = require('utility');
+var _ = require('lodash');
+var eventproxy = require('eventproxy');
 
 /**
  * 根据分类ID，查找分类信息
@@ -78,15 +83,18 @@ exports.newAndSaveEduTypeItemOrOption = function(name, slug, grade, description,
 		if(parentSort === null)
 			return callback(null, null);
 
-		if(parentSort.ancestors !== null)
-			newSort.ancestors.push(parentSort.ancestors);
+		newSort.ancestors = [];
 
 		newSort.ancestors.push({
 			_id:parentSort._id,
 			name:parentSort.name,
 			slug:parentSort.slug,
 			description:parentSort.description,
-			remark:parentSort.remark});
+			remark:parentSort.remark,
+			grade:parentSort.grade});
+
+		if(parentSort.ancestors !== null)
+			newSort.ancestors = newSort.ancestors.concat(parentSort.ancestors);
 
 		newSort.parent_id = parentId;
 		newSort.save(callback);
@@ -129,55 +137,87 @@ exports.getEduTypeItemOptions = function(item_id,callback){
 };
 
 exports.getEduTypeDetails = function(eduType_id,callback){
-	var mapReduceObject = {};
-	var eduTypeItemMap = function(){
-		emit(this._id, {EduTypeItem:this, EduTypeItemOption:null});
-	};
-	var eduTypeItemQuery = {
-		parent_id:eduType_id,
-		grade:1
-	};
-	var eduTypeDetailsReduce = function(k, vals){
-		var result = {EduTypeItem:null, EduTypeItemOptions:[]};
-		vals.forEach(function(value){
-			if(result.EduTypeItem === null && value.EduTypeItem !== null){
-				result.EduTypeItem = value.EduTypeItem;
-			}
+	var ep = new eventproxy();
 
-			if(value.EduTypeItemOption !== null){
-				result.EduTypeItemOptions.push(value.EduTypeItemOption);
-			}
+	ep.fail(callback);
+	ep.all('get_items','get_options',function(items,options){
+		if(items === null || items.length <= 0)
+			return callback(null,null);
 
-			result.EduTypeItem = value.EduTypeItem;
-			Sort.find({parent_id:result.EduTypeItem._id, grade:2},function(err,options){
-				if(err)
-					return callback(err, null);
-				result.EduTypeItemOptions.push(options);
+		var details = [];
+		var detailItem = {};
+		_.forEach(items, function(item){
+			detailItem.EduTypeItem = item;
+			detailItem.EduTypeItemOptions = _.filter(options,function(option){
+				return option.parent_id.toString() === item._id.toString();
 			});
-
+			details.unshift(detailItem);
 		});
-		return result;
-	};
 
-	mapReduceObject.map = eduTypeItemMap;
-	mapReduceObject.reduce = eduTypeDetailsReduce;
-	mapReduceObject.out = {
-		//reduce:'reduce_SortEduTypeDetails',
-		inline:1
-	};
-	mapReduceObject.query = eduTypeItemQuery;
-
-	Sort.mapReduce(mapReduceObject,function(err,detailResults) {
-		if (err) {
-			return callback(err, null);
-		}
-		if(typeof(detailResults) === 'undefined' || detailResults === null || detailResults.length <= 0)
-			return callback(null, null);
-
-		callback(null, detailResults);
+		callback(null, details);
 	});
+
+	Sort.find({parent_id:eduType_id,grade:1},ep.done('get_items'));
+	Sort.find({'ancestors._id':mongoose.Types.ObjectId(eduType_id),grade:2},ep.done('get_options'));
+
+
 };
 
 exports.updateAncestor = function(newAncestor,callback){
 	Sort.update({'ancestors._id':newAncestor._id},{$set:{'ancestors.$':newAncestor}},{ multi: true },callback);
-}
+};
+
+var updateStudentSort = function(){
+};
+
+/* region Remove */
+exports.removeEduTypeItemOption = function(optionId, callback){
+	Sort.findOneAndRemove({_id:optionId, grade:2},function(err, option){
+		if(err)
+			return callback(err, null);
+		updateStudentSort();
+		callback(null, true);
+	});
+};
+exports.removeEduTypeItem = function(itemId,callback){
+	Sort.findOneAndRemove({_id:itemId, grade:1},function(err,item){
+		if(err)
+			return callback(err, null);
+
+		var ep = new eventproxy();
+		ep.fail(callback);
+		ep.all('removeOptions',function(removeOptions){
+			callback(null, removeOptions);
+		});
+
+		Sort.remove({parent_id:itemId, grade:2},function(err){
+			if (err)
+				// 一旦发生异常，一律交给error事件的handler处理
+				return ep.emit('error', err);
+
+			ep.emit('removeOptions',true);
+		});
+
+	});
+};
+exports.removeEduType = function(typeId, callback){
+	Sort.findOneAndRemove({_id:typeId, grade:0},function(err, type){
+		if(err)
+			return callback(err,null);
+
+		var ep = new eventproxy();
+		ep.fail(callback);
+		ep.all('removeDetails',function(removeDetails){
+			callback(null, removeDetails);
+		});
+
+		Sort.remove({'ancestors._id':mongoose.Types.ObjectId(typeId)},function(err){
+			if (err)
+			// 一旦发生异常，一律交给error事件的handler处理
+				return ep.emit('error', err);
+
+			ep.emit('removeDetails',true);
+		})
+	})
+};
+/* endregion */

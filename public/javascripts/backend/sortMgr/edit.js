@@ -6,8 +6,8 @@ var buildEduTypeDetailsHtml = function($wrapEl, detailsData){
 	var outputHtml = '';
 	var message = '';
 	_.forEach(detailsData, function(detailValue){
-		var detailItem = detailValue.value.EduTypeItem;
-		var detailItemOptions = detailValue.value.EduTypeItemOption;
+		var detailItem = detailValue.EduTypeItem;
+		var detailItemOptions = detailValue.EduTypeItemOptions;
 		message =
 			'<div class="sort_eduType_item ac_sortItem"' +
 			'data-id="' + detailItem._id +
@@ -59,13 +59,13 @@ var buildEduTypeItemOptionsHtml = function(optionsData){
 			'" data-grade="' + optionData.grade + '" >' +
 			'<section class="cell-row">' +
 			'<section class="sort_eduType_item_option_name cell-row-col cell-row-description">' +
-			optionData.name +
+			optionData.name + '&nbsp;(' + optionData.slug + ')' +
 			'</section>' +
 			'<div class="cell-row-right-arrow">' +
-			'<a class="sort_eduType_item_removeOption" href="#">' +
+			'<a class="sort_eduType_item_removeOption">' +
 			'<span class="glyphicon glyphicon-trash"></span>' +
 			'</a>&nbsp;' +
-			'<a class="sort_eduType_item_editOption" href="#">' +
+			'<a class="sort_eduType_item_editOption">' +
 			'<span class="glyphicon glyphicon-pencil"></span>' +
 			'</a>' +
 			'</div>' +
@@ -155,8 +155,42 @@ $(function(){
 		var sortId = $itemWrapEl.attr('data-id');
 		editBox($itemWrapEl,$eduTypeItemList,ajaxUrl,sortId,typeId);
 	});
+	$('.ac_sortmgr_list').delegate('.sort_eduType_item_remove','click',function(event){
+		event.preventDefault();
+		var $eduTypeItemList = $(".ac_sortmgr_list");
+		var $itemWrapEl = $(this).parents('.sort_eduType_item');
+		var ajaxUrl = '/backend/SortMgr/removeEduTypeItem';
+		var typeId = $eduTypeItemList.attr('data-eduTypeId');
+		var sortId = $itemWrapEl.attr('data-id');
+		deleteBox($eduTypeItemList,ajaxUrl,sortId,typeId);
+	});
 
 	$('.ac_sortmgr_list').delegate('.sort_eduType_item_addOption','click',function(event){
 		event.preventDefault();
+		var $eduTypeItemList = $(".ac_sortmgr_list");
+		var $itemWrapEl = $(this).parents('.sort_eduType_item');
+		var ajaxUrl = '/backend/SortMgr/NewEduTypeItemOrOption';
+		var parentId = $itemWrapEl.attr('data-id');
+		var eduTypeId = $eduTypeItemList.attr('data-eduTypeId');
+		var grade = '2';
+		newBox($eduTypeItemList,ajaxUrl,eduTypeId,parentId,grade);
 	});
+	$('.ac_sortmgr_list').delegate('.sort_eduType_item_removeOption','click',function(event){
+		event.preventDefault();
+		var $eduTypeItemList = $(".ac_sortmgr_list");
+		var $itemWrapEl = $(this).parents('.sort_eduType_item_option');
+		var ajaxUrl = '/backend/SortMgr/removeEduTypeItemOption';
+		var typeId = $eduTypeItemList.attr('data-eduTypeId');
+		var sortId = $itemWrapEl.attr('data-id');
+		deleteBox($eduTypeItemList,ajaxUrl,sortId,typeId);
+	})
+	$('.ac_sortmgr_list').delegate('.sort_eduType_item_editOption','click',function(event){
+		event.preventDefault();
+		var $eduTypeItemList = $(".ac_sortmgr_list");
+		var $itemWrapEl = $(this).parents('.sort_eduType_item_option');
+		var ajaxUrl = '/backend/SortMgr/EditEduTypeItemOrOption';
+		var typeId = $eduTypeItemList.attr('data-eduTypeId');
+		var sortId = $itemWrapEl.attr('data-id');
+		editBox($itemWrapEl,$eduTypeItemList,ajaxUrl,sortId,typeId);
+	})
 });

@@ -16,8 +16,9 @@ mongoose.connect(config.db, function (err) {
 
 require('./User');
 require('./Sort');
-
+require('./Student');
 
 exports.User = mongoose.model('User');
 exports.Sort = mongoose.model('Sort');
+exports.Student = mongoose.model('Student');
 
