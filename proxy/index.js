@@ -4,3 +4,4 @@
 
 exports.User = require('./user');
 exports.Sort = require('./sort');
+exports.Student = require('./student');

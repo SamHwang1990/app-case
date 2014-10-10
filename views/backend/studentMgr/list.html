@@ -1,0 +1,31 @@
+<%- Loader('/public/backend/usermgr.min.css')
+.css('/public/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<div class="container ac_b_wrapper">
+    <% if (typeof(error) !== 'undefined' && error) { %>
+    <div class="ac_callout ac_callout_danger">
+        <p>出错：<%= error %></p>
+    </div>
+    <% } %>
+    <% if (typeof(success) !== 'undefined' && success) { %>
+    <div class="ac_callout ac_callout_info">
+        <p>成功：<%= success %></p>
+    </div>
+    <% } %>
+    <div class="page-header">
+        <h2>学生列表</h2>
+    </div>
+    <div id="studentlist_table_toolbar">
+        <div class="form-inline" role="form">
+            <a href="/backend/StudentMgr/New" type="submit" class="btn btn-primary">添加</a>
+        </div>
+    </div>
+    <table id="studentlist_table"></table>
+</div>
+<!-- js -->
+<%- Loader('/public/backend/studentmgr_list.min.js')
+.js('/public/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
+.js('/public/javascripts/backend/studentMgr/list.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

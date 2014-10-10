@@ -37,7 +37,7 @@ module.exports = function(app,express){
 	backend_router.route(['/','/index'])
 		.get(backend.index);
 
-	//backend user mgr
+	//region backend user mgr
 	backend_router.route(['/UserMgr','/UserMgr/List'])
 		.get(backend.UserMgr.showList);
 	backend_router.get('/UserMgr/ajaxList',backend.UserMgr.ajaxList);
@@ -50,7 +50,9 @@ module.exports = function(app,express){
 	backend_router.route(['/UserMgr/Delete/:user_email'])
 		.get(backend.UserMgr.delete);
 
-	//backend sort mgr
+	//endregion
+
+	//region backend sort mgr
 	backend_router.route(['/SortMgr','/SortMgr/List'])
 		.get(backend.SortMgr.showList);
 	backend_router.route(['/SortMgr/New'])
@@ -79,6 +81,15 @@ module.exports = function(app,express){
 		.post(backend.SortMgr.removeEduTypeItem);
 	backend_router.route(['/SortMgr/removeEduType'])
 		.post(backend.SortMgr.removeEduType);
+
+	//endregion
+
+	//region backend student mgr
+
+	backend_router.route(['/StudentMgr','/StudentMgr/List'])
+		.get(backend.StudentMgr.showStudentList);
+	backend_router.get('/StudentMgr/ajaxList',backend.StudentMgr.ajaxStudentList);
+
 
 	//endregion
 };

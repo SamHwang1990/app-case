@@ -24,8 +24,6 @@ exports.showList = function(req, res, next){
 	})
 };
 exports.ajaxList = function(req,res,next){
-	var limit = parseInt(req.query.limit, 10) || 10;
-	var offset = parseInt(req.query.offset, 10) || 0;
 
 	var proxy = eventproxy.create('users',
 		function (users) {

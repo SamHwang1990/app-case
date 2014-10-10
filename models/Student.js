@@ -8,7 +8,6 @@ var StudentSchema = new Schema({
     name:{type:String},
     name_en:{type:String},
     email:{type:String},
-    url:{type:String},
     avatar:{type:String},
 
     profile_image_url: {type: String},      //个人照片
@@ -21,8 +20,12 @@ var StudentSchema = new Schema({
 
     is_block:{type:Boolean, default:false},
 
-    create_date:{type:Date},
-    last_edit_date:{type:Date}
+	create_date:{type:String, default:Date(), get:function(val){
+		return new Date(val);
+	}},
+    last_edit_date:{type:String, default:Date(), get:function(val){
+	    return new Date(val);
+    }}
 });
 
 StudentSchema.index({name:1});
