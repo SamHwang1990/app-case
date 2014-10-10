@@ -1,10 +1,20 @@
 <div class="container ac_b_wrapper">
+
     <div class="ac_callout ac_callout_danger hidden">
+        <% if (typeof(error) !== 'undefined' && error) { %>
+        <p>出错：<%= error %></p>
+        <% }else{ %>
         <p></p>
+        <% } %>
     </div>
     <div class="ac_callout ac_callout_info hidden">
+        <% if (typeof(success) !== 'undefined' && success) { %>
+        <p>成功：<%= success %></p>
+        <% }else{ %>
         <p></p>
+        <% } %>
     </div>
+
     <div class="page-header">
         <h2>筛选类别列表</h2>
     </div>

@@ -59,6 +59,9 @@ module.exports = function(app,express){
 		.get(backend.SortMgr.showEduTypeDetails);
 	backend_router.route(['/SortMgr/Edit/:typeId'])
 		.get(backend.SortMgr.showEditEduType);
+	backend_router.route(['/SortMgr/EditDetails/:typeId'])
+		.get(backend.SortMgr.showEditEduTypeDetails);
+
 
 	backend_router.route(['/SortMgr/NewEduType'])
 		.post(backend.SortMgr.newEduType);

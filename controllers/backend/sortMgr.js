@@ -46,7 +46,7 @@ exports.showNew = function(req,res,next){
 		success:req.flash('success').toString(),
 		isBack:true,
 		topic:{
-			title:'增加筛选分类 - 筛选管理 - 后台管理 - ' + config.description
+			title:'增加留学类型 - 筛选管理 - 后台管理 - ' + config.description
 		}
 	})
 };
@@ -61,35 +61,38 @@ exports.newEduType = function(req,res,next){
 	var remark = validator.trim(req.body.remark);
 	remark = sanitizer.sanitize(remark);
 
+	var error_render = function(req, res){
+		res.render('backend/sortMgr/new', {
+			error: req.flash('error').toString(),
+			success: req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'增加留学类型 - 筛选管理 - 后台管理 - ' + config.description
+			},
+			name:name,slug:slug,name: name, description: description, remark:remark});
+	};
+
 	if (name === '' || slug === '') {
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'信息不完整。'
-		});
+		req.flash('error','信息不完整。');
+		error_render(req,res);
 		return;
 	}
 
 	if (name.length < 1) {
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'留学类型名至少需要1个字符。'
-		});
+		req.flash('error','留学类型名至少需要1个字符。');
+		error_render(req,res);
 		return;
 	}
 
 	if (slug.length < 1) {
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'留学类型英文名至少需要1个字符。'
-		});
+		req.flash('error','留学类型英文名至少需要1个字符。');
+		error_render(req,res);
 		return;
 	}
 
 	if(!validator.isAlphanumeric(slug)){
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'留学类型英文名只能使用0-9，a-z，A-Z。'
-		});
+		req.flash('error','留学类型英文名只能使用0-9，a-z，A-Z。');
+		error_render(req,res);
 		return;
 	}
 
@@ -103,19 +106,17 @@ exports.newEduType = function(req,res,next){
 		if(err)
 			return next(err);
 		if(eduTypes.length > 0){
-			return res.json({
-				SaveResult:false,
-				ErrorMsg:'留学类型名或英文名已被占用。'
-			});
+			req.flash('error','留学类型名或英文名已被占用。');
+			error_render(req,res);
+			return;
 		}
 
 		Sort.newAndSaveEduType(name, slug, description, remark, function(err, sort){
 			if(err)
 				return next(err);
-			res.json({
-				SaveResult:true,
-				SuccessMsg:'留学类型新建成功。'
-			});
+
+			req.flash('success','留学类型保存成功。');
+			res.redirect('/backend/SortMgr/EditDetails/' + sort._id);
 			return;
 		});
 	});
@@ -220,7 +221,7 @@ exports.showEditEduType = function(req,res,next){
 			success:req.flash('success').toString(),
 			isBack:true,
 			topic:{
-				title:'编辑筛选分类 - 筛选管理 - 后台管理 - ' + config.description
+				title:'编辑留学类型 - 筛选管理 - 后台管理 - ' + config.description
 			},
 			_id:sort._id,
 			name:sort.name,
@@ -231,8 +232,27 @@ exports.showEditEduType = function(req,res,next){
 	});
 
 };
+exports.showEditEduTypeDetails = function(req,res,next){
+	var eduTypeId = req.params.typeId;
+	eduTypeId = validator.trim(eduTypeId);
+	Sort.getSortById(eduTypeId,function(err, type){
+		if(err)
+			return next(err);
+
+		res.render('backend/sortMgr/editDetails',{
+			error:req.flash('error').toString(),
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'编辑留学类型筛选细节 - 筛选管理 - 后台管理 - ' + config.description
+			},
+			typeId:eduTypeId,
+			typeName:type.name
+		});
+	});
+};
 exports.editEduType = function(req,res,next){
-	var _id = validator.trim(req.body._id);
+	var _id = validator.trim(req.body.eduTypeId);
 	var name = validator.trim(req.body.name);
 	name = sanitizer.sanitize(name);
 	var slug = validator.trim(req.body.slug);
@@ -242,35 +262,38 @@ exports.editEduType = function(req,res,next){
 	var remark = validator.trim(req.body.remark);
 	remark = sanitizer.sanitize(remark);
 
+	var error_render = function(req, res){
+		res.render('backend/sortMgr/edit', {
+			error: req.flash('error').toString(),
+			success: req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'编辑留学类型 - 筛选管理 - 后台管理 - ' + config.description
+			},
+			_id:_id,name:name,slug:slug,name: name, description: description, remark:remark});
+	};
+
 	if (_id === '' || name === '' || slug === '') {
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'信息不完整。'
-		});
+		req.flash('error','信息不完整。');
+		error_render(req,res);
 		return;
 	}
 
 	if (name.length < 1) {
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'留学类型名至少需要1个字符。'
-		});
+		req.flash('error','留学类型名至少需要1个字符。');
+		error_render(req,res);
 		return;
 	}
 
 	if (slug.length < 1) {
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'留学类型英文名至少需要1个字符。'
-		});
+		req.flash('error','留学类型英文名至少需要1个字符。');
+		error_render(req,res);
 		return;
 	}
 
 	if(!validator.isAlphanumeric(slug)){
-		res.json({
-			SaveResult:false,
-			ErrorMsg:'留学类型英文名只能使用0-9，a-z，A-Z。'
-		});
+		req.flash('error','留学类型英文名只能使用0-9，a-z，A-Z。');
+		error_render(req,res);
 		return;
 	}
 
@@ -278,11 +301,11 @@ exports.editEduType = function(req,res,next){
 		if(err)
 			return next(err);
 
-		if(sort === null || sort === undefined)
-			return res.json({
-				SaveResult:false,
-				ErrorMsg:'信息有错误，请刷新！'
-			});
+		if(sort === null || sort === undefined) {
+			req.flash('error','信息有错误，请刷新！');
+			error_render(req,res);
+			return;
+		}
 
 		Sort.getSortsByQuery({
 			_id:{$ne:_id},
@@ -293,10 +316,9 @@ exports.editEduType = function(req,res,next){
 			]
 		},{},function(err,sorts){
 			if(sorts.length > 0){
-				return res.json({
-					SaveResult:false,
-					ErrorMsg:'留学类型名或英文名已被占用。'
-				});
+				req.flash('error','留学类型名或英文名已被占用。');
+				error_render(req,res);
+				return;
 			}
 
 			sort.name = name;
@@ -318,10 +340,9 @@ exports.editEduType = function(req,res,next){
 					if(err)
 						return next(err);
 
-					return res.json({
-						SaveResult:true,
-						SuccessMsg:'留学类型保存成功。'
-					});
+					req.flash('success','留学类型保存成功。');
+					res.redirect('/backend/SortMgr/EditDetails/' + _id);
+					return;
 				});
 			});
 		})

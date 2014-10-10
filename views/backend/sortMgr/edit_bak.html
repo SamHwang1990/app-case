@@ -1,0 +1,89 @@
+<div class="container ac_b_wrapper">
+    <div class="ac_callout ac_callout_danger hidden">
+        <p></p>
+    </div>
+    <div class="ac_callout ac_callout_info hidden">
+        <p></p>
+    </div>
+    <div class="page-header">
+        <h2>编辑筛选类别</h2>
+    </div>
+
+    <ul class="sort_edit_tabs nav nav-tabs nav-justified" role="tablist">
+        <li class="active">
+            <a href="#sort_eduType" data-href="#sort_eduType" role="tab" data-toggle="tab">
+                留学类型信息
+            </a>
+        </li>
+        <li class="disabled">
+            <a data-href="#sort_eduType_detail" role="tab" data-toggle="">
+                留学类型分类
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content padding-top-2">
+        <div class="tab-pane active" id="sort_eduType">
+            <div class="row">
+                <div class="col-md-4">
+                    <form class="sort_eduType_editForm" action="/backend/SortMgr/EditEduType" role="form" method="post">
+                        <% if(typeof(_id) !== 'undefined'){ %>
+                        <input type="hidden" name="eduTypeId" value="<%= _id %>" />
+                        <% } %>
+
+                        <div class="form-group">
+                            <label for="name">1. 留学类型中文名</label>
+                            <% if(typeof(name) !== 'undefined'){ %>
+                            <input type="text" class="form-control" name="name" placeholder="留学类型名" value="<%= name %>" />
+                            <% }else { %>
+                            <input type="text" class="form-control" name="name" placeholder="留学类型名" />
+                            <% } %>
+                        </div>
+                        <div class="form-group">
+                            <label for="slug">2. 留学类型英文名</label>
+                            <% if(typeof(slug) !== 'undefined'){ %>
+                            <input type="text" class="form-control" name="slug" placeholder="留学类型英文名" value="<%= slug %>" />
+                            <% }else { %>
+                            <input type="text" class="form-control" name="slug" placeholder="留学类型英文名" />
+                            <% } %>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" >3. 留学类型描述</label>
+                            <% if(typeof(description) !== 'undefined'){ %>
+                            <input type="text" class="form-control" name="description" placeholder="留学类型描述，前台展示所用" value="<%= description %>" />
+                            <% }else { %>
+                            <input type="text" class="form-control" name="description" placeholder="留学类型描述，前台展示所用" />
+                            <% } %>
+                        </div>
+                        <div class="form-group">
+                            <label for="remark" >4. 留学类型备注</label>
+                            <% if(typeof(remark) !== 'undefined'){ %>
+                            <textarea class="form-control" name="remark" placeholder="留学类型备注，管理人员所用"><%= remark %></textarea>
+                            <% }else { %>
+                            <textarea class="form-control" name="remark" placeholder="留学类型备注，管理人员所用"></textarea>
+                            <% } %>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">保存</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="sort_eduType_detail">
+            <div class="ac_sortmgr_list" data-eduTypeId="<%= _id %>" >
+            </div>
+            <br/>
+            <div>
+                <a type="button" class="sort_eduType_item_add btn btn-default btn-lg btn-block" data-parentId="<%= _id %>">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    添加新分类
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- js -->
+<%- Loader('/public/backend/sortmgr_edit.min.js')
+.js('/public/javascripts/libs/bootbox.min.js')
+.js('/public/javascripts/backend/sortMgr/assert.js')
+.js('/public/javascripts/backend/sortMgr/edit.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

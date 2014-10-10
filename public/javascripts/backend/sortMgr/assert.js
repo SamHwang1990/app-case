@@ -104,6 +104,16 @@ var resetCallout = function(){
 	$acCallout.addClass('hidden');
 	$acCallout.find('p').text('');
 };
+var initCallout = function(){
+	$('.ac_callout').each(function(){
+		if($(this).find('p').text() !== ''){
+			$(this).removeClass('hidden');
+		}
+	});
+	setTimeout(function(){
+		resetCallout();
+	},3000)
+};
 var updateSuccessCallout = function(successMsg){
 	resetCallout();
 	$('.ac_callout_info').removeClass('hidden').find('p').text("成功：" + successMsg);
