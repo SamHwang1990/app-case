@@ -217,7 +217,7 @@ exports.removeEduType = function(typeId, callback){
 				return ep.emit('error', err);
 
 			ep.emit('removeDetails',true);
-		})
-	})
+		});
+	});
 };
 /* endregion */

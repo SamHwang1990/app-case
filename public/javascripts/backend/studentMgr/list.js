@@ -84,7 +84,7 @@ $(function(){
 					return '禁用';
 			}
 		},{
-			field: 'email',
+			field: '_id',
 			title: '操作',
 			align:'center',
 			valign:'middle',

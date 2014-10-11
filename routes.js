@@ -90,6 +90,9 @@ module.exports = function(app,express){
 		.get(backend.StudentMgr.showStudentList);
 	backend_router.get('/StudentMgr/ajaxList',backend.StudentMgr.ajaxStudentList);
 
+	backend_router.route(['/StudentMgr/New'])
+		.get(backend.StudentMgr.showNew)
+		.post(backend.StudentMgr.newStudent);
 
 	//endregion
 };

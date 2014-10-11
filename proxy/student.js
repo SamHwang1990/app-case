@@ -80,3 +80,15 @@ exports.getStudentByMail = function (email, callback) {
 exports.getStudentsByQuery = function (query, opt, callback) {
 	Student.find(query, {}, opt, callback);
 };
+
+exports.newAndSave = function (name, name_en, email, is_block, remark, callback) {
+	var student = new Student();
+	student.name = name;
+	student.name_en = name_en;
+	student.email = email;
+	student.is_block = is_block;
+	student.remark = remark;
+	student.create_date = Date();
+	student.create_date = student.create_date;
+	student.save(callback);
+};

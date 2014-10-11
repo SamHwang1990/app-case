@@ -99,7 +99,7 @@ exports.removeUserByEmail = function(email, callback){
 	User.remove({email:email},callback);
 };
 
-exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, create_date, last_login_date, callback) {
+exports.newAndSave = function (name, name_en, pass, email, avatar_url, active, callback) {
     var user = new User();
     user.name = name;
     user.name_en = name_en;
