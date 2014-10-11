@@ -94,5 +94,12 @@ module.exports = function(app,express){
 		.get(backend.StudentMgr.showNew)
 		.post(backend.StudentMgr.newStudent);
 
+	backend_router.route(['/StudentMgr/Edit/:studentId'])
+		.get(backend.StudentMgr.showEdit)
+		.post(backend.StudentMgr.editStudent);
+
+	backend_router.route(['/StudentMgr/Delete/:studentId'])
+		.get(backend.StudentMgr.delete);
+
 	//endregion
 };

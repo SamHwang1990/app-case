@@ -54,18 +54,19 @@ exports.newStudent = function(req,res,next){
 	email = sanitizer.sanitize(email);
 	var remark = validator.trim(req.body.remark);
 	remark = sanitizer.sanitize(remark);
-
 	var is_block = validator.trim(req.body.is_block);
 	is_block = is_block === 'on'?true:false;
+	var profileImg = validator.trim(req.body.profileImg);
+	profileImg = sanitizer.sanitize(profileImg);
 
 	var error_render = function(req, res){
-		res.render('backend/userMgr/edit', {
+		res.render('backend/studentMgr/edit', {
 			error: req.flash('error').toString(),
 			isBack:true,
 			topic:{
 				title:'添加学生 - 学生管理 - 后台管理 - ' + config.description
 			},
-			name: name, email: email, name_en:name_en, remark:remark, is_block:is_block});
+			name: name, email: email, name_en:name_en, remark:remark, is_block:is_block,profileImg:profileImg});
 	};
 
 	if (name === '' || name_en === '' ||  email === '') {
@@ -108,12 +109,143 @@ exports.newStudent = function(req,res,next){
 			return;
 		}
 
-		Student.newAndSave(name,name_en,email,is_block,remark,function(err, student){
+		Student.newAndSave(name,name_en,email,is_block,remark,profileImg,function(err, student){
 			if(err)
 				return next(err);
 
-			res.redirect('/backend/StudentMgr/List');
+			return res.redirect('/backend/StudentMgr/List');
 			//res.redirect('/backend/StudentMgr/SortMgr/' + student._id);
 		});
 	});
+};
+
+exports.showEdit = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		res.render('backend/studentMgr/edit',{
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'编辑学生信息 - 学生管理 - 后台管理 - ' + config.description
+			},
+			name:student.name,
+			name_en:student.name_en,
+			email:student.email,
+			remark:student.remark,
+			is_block:student.is_block,
+			profileImg:student.profile_image
+		})
+	});
+};
+exports.editStudent = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+
+	var name = validator.trim(req.body.name);
+	name = sanitizer.sanitize(name);
+	var name_en = validator.trim(req.body.name_en);
+	name_en = sanitizer.sanitize(name_en);
+	var email = validator.trim(req.body.email);
+	email = email.toLowerCase();
+	email = sanitizer.sanitize(email);
+	var remark = validator.trim(req.body.remark);
+	remark = sanitizer.sanitize(remark);
+	var is_block = validator.trim(req.body.is_block);
+	is_block = is_block === 'on'?true:false;
+	var profileImg = validator.trim(req.body.profileImg);
+	profileImg = sanitizer.sanitize(profileImg);
+
+	var error_render = function(req, res){
+		res.render('backend/studentMgr/edit', {
+			error: req.flash('error').toString(),
+			isBack:true,
+			topic:{
+				title:'编辑学生信息 - 学生管理 - 后台管理 - ' + config.description
+			},
+			name: name, email: email, name_en:name_en, remark:remark, is_block:is_block,profileImg:profileImg});
+	};
+
+	if (name === '' || name_en === '' ||  email === '') {
+		req.flash('error','信息不完整。');
+		error_render(req,res);
+		return;
+	}
+
+	if(!validator.isEmail(email)){
+		req.flash('error','不正确的电子邮箱。');
+		error_render(req,res);
+		return;
+	}
+
+	if (name.length < 1) {
+		req.flash('error','学生名至少需要1个字符。');
+		error_render(req,res);
+		return;
+	}
+
+	if (name_en.length < 1) {
+		req.flash('error','学生英文名至少需要1个字符。');
+		error_render(req,res);
+		return;
+	}
+
+	if(!validator.isAlphanumeric(name_en)){
+		req.flash('error','学生英文名只能使用0-9，a-z，A-Z。');
+		error_render(req,res);
+		return;
+	}
+
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		if(student === null){
+			req.flash('error','信息出错，请刷新重新提交。');
+			error_render(req,res);
+			return;
+		}
+
+		Student.getStudentsByQuery({
+			'_id':{$ne:studentId},
+			'email':email
+		},{},function(err,students){
+			if(err)
+				return next(err);
+
+			if(students.length > 0){
+				req.flash('error','邮箱名已被占用。');
+				error_render(req,res);
+				return;
+			}
+
+			student.name = name;
+			student.name_en = name_en;
+			student.email = email;
+			student.remark = remark;
+			student.profile_image = profileImg;
+			student.is_block = is_block;
+
+			student.save(function(err){
+				if(err)
+					return next(err);
+
+				return res.redirect('/backend/StudentMgr/List');
+				//res.redirect('/backend/StudentMgr/SortMgr/' + student._id);
+			})
+		})
+
+	});
+};
+
+exports.delete = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+
+	Student.removeStudentById(studentId,function(err){
+		if(err)
+			return next(err);
+
+		res.redirect('/backend/StudentMgr/List');
+	})
 };

@@ -56,37 +56,38 @@
     <div class="row">
         <div class="col-md-4">
             <h2>
-                添加学生：
+                编辑学生信息：
             </h2>
             <form role="form" method="post">
                 <div class="form-group">
+
                     <label for="email" class="sr-only">学生邮箱</label>
                     <% if(typeof(email) !== 'undefined'){ %>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="请输入学生邮箱" value="<%= email %>">
+                    <input type="email" class="form-control" name="email" placeholder="请输入学生邮箱" value="<%= email %>">
                     <% } else { %>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="请输入学生邮箱">
+                    <input type="email" class="form-control" name="email" placeholder="请输入学生邮箱">
                     <% } %>
                 </div>
                 <div class="form-group">
                     <label for="name" class="sr-only">中文名</label>
                     <% if(typeof(name) !== 'undefined'){ %>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="中文名" value="<%= name %>">
+                    <input type="text" class="form-control" name="name" placeholder="中文名" value="<%= name %>">
                     <% }else { %>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="中文名">
+                    <input type="text" class="form-control" name="name" placeholder="中文名">
                     <% } %>
                 </div>
                 <div class="form-group">
                     <label for="name_en" class="sr-only">英文名</label>
                     <% if(typeof(name_en) !== 'undefined'){ %>
-                    <input type="text" class="form-control" id="name_en" name="name_en" placeholder="英文名" value="<%= name_en %>">
+                    <input type="text" class="form-control" name="name_en" placeholder="英文名" value="<%= name_en %>">
                     <% }else { %>
-                    <input type="text" class="form-control" id="name_en" name="name_en" placeholder="英文名">
+                    <input type="text" class="form-control" name="name_en" placeholder="英文名">
                     <% } %>
                 </div>
                 <div class="checkbox">
                     <label>
                         <% if(typeof(is_block) !== 'undefined' && is_block == true) { %>
-                        <input type="checkbox" name="is_block" checked>
+                        <input type="checkbox" name="is_block" checked >
                         <% } else { %>
                         <input type="checkbox" name="is_block">
                         <% } %>
@@ -125,7 +126,7 @@
                             <div class="spinner" style="display: none">Loading...</div>
                         </div>
                         <div class="cropped">
-                            <% if(typeof(profileImg) !== 'undefined' && profileImg !== null && profileImg !== ''){ %>
+                            <% if(profileImg !== null && typeof(profileImg) !== 'undefined' && profileImg !== ''){ %>
                             <img src="<%= profileImg %>" />
                             <% } %>
                         </div>
