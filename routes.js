@@ -28,7 +28,8 @@ module.exports = function(app,express){
     app.get('/signin', auth.signoutRequired, sign.showSignin);  //跳转到登录页面
     app.post('/signin',auth.signoutRequired,sign.signin);       //提交登录信息
 
-    // region backend
+
+
 	var backend_router = express.Router();
 	app.use('/backend', backend_router);
 	backend_router.use(auth.signinRequired);
@@ -100,6 +101,12 @@ module.exports = function(app,express){
 
 	backend_router.route(['/StudentMgr/Delete/:studentId'])
 		.get(backend.StudentMgr.delete);
+
+	backend_router.route(['/StudentMgr/EditSort/:studentId'])
+		.get(backend.StudentMgr.showEditSort);
+	backend_router.route(['/StudentMgr/EditResume/:studentId']);
+
+	backend_router.route(['/StudentMgr/EditEssay/:studentId']);
 
 	//endregion
 };

@@ -9,6 +9,7 @@ var _ = require('lodash');
 
 var config = require('../../config').config;
 var Student = require('../../proxy').Student;
+var Sort = require('../../proxy').Sort;
 
 exports.showStudentList = function(req,res,next){
 	res.render('backend/studentMgr/list',{
@@ -248,4 +249,25 @@ exports.delete = function(req,res,next){
 
 		res.redirect('/backend/StudentMgr/List');
 	})
+};
+
+exports.showEditSort = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+
+	var ep = new eventproxy();
+	ep.all('getStudent','getEduTypes',function(student,eduTypes){
+		return res.render('backend/studentMgr/editSort',{
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'编辑学生筛选信息 - 学生管理 - 后台管理 - ' + config.description
+			},
+			EduTypes:eduTypes,
+			name:student.name
+		})
+	});
+	ep.fail(next);
+
+	Student.getStudentById(studentId,ep.done('getStudent'));
+	Sort.getSortsByQuery({grade:0},{'ancestors':-1,'parent_id':-1},ep.done('getEduTypes'));
 };

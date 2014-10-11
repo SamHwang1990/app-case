@@ -98,12 +98,30 @@ $(function(){
 					value +
 					'" title="' +
 					value +
-					'">修改学生信息</a>');
+					'">修改信息</a>');
+
+				execArray.push('<a href="/backend/StudentMgr/EditSort/' +
+					value +
+					'" title="' +
+					value +
+					'">修改分类</a>');
+
+				execArray.push('<a href="/backend/StudentMgr/EditResume/' +
+					value +
+					'" title="' +
+					value +
+					'">修改案例</a>');
+
+				execArray.push('<a href="/backend/StudentMgr/EditEssay/' +
+					value +
+					'" title="' +
+					value +
+					'">修改文书</a>');
 
 				execArray.push('<a href="/backend/StudentMgr/Delete/' +
 					value +
 					'" title="' + value +
-					'">删除学生信息</a>');
+					'">删除学生</a>');
 				return execArray.join('&emsp;');
 			}
 		}]
