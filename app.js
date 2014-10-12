@@ -51,6 +51,7 @@ app.locals._layoutFile = 'layout.html';
 app.use(require('response-time')());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
+	limit: '50mb',
     extended:true
 }));
 app.use(require('method-override')());

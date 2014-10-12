@@ -105,12 +105,15 @@ module.exports = function(app,express){
 	backend_router.route(['/StudentMgr/EditSort/:studentId'])
 		.get(backend.StudentMgr.showEditSort)
 		.post(backend.StudentMgr.editStudentSort);
-	backend_router.route(['/StudentMgr/EditResume/:studentId']);
+	backend_router.route(['/StudentMgr/GetSortContent/:studentId'])
+		.get(backend.StudentMgr.ajaxStudentSort);
+	backend_router.route(['/StudentMgr/EditResume/:studentId'])
+		.get(backend.StudentMgr.showEditResume)
+		.post(backend.StudentMgr.editStudentResume);
 
 	backend_router.route(['/StudentMgr/EditEssay/:studentId']);
 
-	backend_router.route(['/StudentMgr/GetSortContent/:studentId'])
-		.get(backend.StudentMgr.ajaxStudentSort);
+
 
 	//endregion
 };

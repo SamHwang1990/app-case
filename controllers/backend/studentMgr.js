@@ -6,7 +6,6 @@ var sanitizer = require('sanitizer');
 var eventproxy = require('eventproxy');
 var util = require('utility');
 var _ = require('lodash');
-var mongoose = require('mongoose');
 
 var config = require('../../config').config;
 var Student = require('../../proxy').Student;
@@ -277,6 +276,7 @@ exports.showEditSort = function(req,res,next){
 				})
 			});
 		}else{
+			//还要检测学生的留学类型是否还存在，如果不存在了，则要删除学生的edu_type、sort_content 值
 			var ep = new eventproxy();
 			ep.fail(next);
 			ep.all('get_details','get_type',function(details, type){
@@ -397,4 +397,45 @@ exports.ajaxStudentSort = function(req,res,next){
 			})
 		})
 	})
+};
+
+exports.showEditResume = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		res.render('backend/studentMgr/editResume',{
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'编辑学生案例 - 学生管理 - 后台管理 - ' + config.description
+			},
+			Student:student
+		})
+	})
+};
+exports.editStudentResume = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	var resumeImg = validator.trim(req.body.resumeImg);
+	resumeImg = sanitizer.sanitize(resumeImg);
+
+	Student.getStudentById(studentId,function(err,student) {
+		if (err)
+			return next(err);
+
+		if (student === null) {
+			req.flash('error', '信息出错，请刷新重新提交。');
+			return res.redirect('/backend/StudentMgr/List');
+		}
+
+		student.resume_image = resumeImg;
+		student.save(function(err){
+			if(err)
+				return next(err);
+
+			return res.redirect('/backend/StudentMgr/List');
+		})
+	});
 };

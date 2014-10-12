@@ -1,10 +1,117 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<style>
+    .help-block{
+        text-align: center;
+    }
+    .imageBox
+    {
+        display: inline-block;
+        position: relative;
+        height: 904px;
+        width: 1300px;
+        border:1px solid #aaa;
+        background: #fff;
+        overflow: hidden;
+        background-repeat: no-repeat;
+        cursor:move;
+    }
 
-</body>
-</html>
+    .imageBox .thumbBox
+    {
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 1250px;
+        height: 854px;
+        margin-top: 25px;
+        margin-left: 25px;
+        box-sizing: border-box;
+        /*border: 1px solid rgb(102, 102, 102);*/
+        box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+        background: none repeat scroll 0% 0% transparent;
+    }
+
+    .imageBox .spinner
+    {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        text-align: center;
+        line-height: 128px;
+        background: rgba(0,0,0,0.7);
+    }
+
+    .cropped{
+        display: inline-block;
+        margin-top: 10px;
+    }
+    .cropped>img
+    {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="ac_b_wrapper">
+    <% if (typeof(error) !== 'undefined' && error) { %>
+    <div class="ac_callout ac_callout_danger">
+        <p>出错：<%= error %></p>
+    </div>
+    <% } %>
+    <div class="container">
+        <div class="page-header">
+            <h2>编辑学生案例：<%= Student.name %>&nbsp;<small><%= Student.remark %></small></h2>
+        </div>
+        <div class="ac_callout ac_callout_primary">
+            <h4>上传案例照片</h4>
+        </div>
+    </div>
+    <div class="help-block">
+        <div class="imageBox">
+            <div class="thumbBox"></div>
+            <div class="spinner" style="display: none">Loading...</div>
+        </div>
+        <div class="cropped">
+            <% if(Student.resume_image !== null && typeof(Student.resume_image) !== 'undefined' && Student.resume_image !== ''){ %>
+            <img src="<%= Student.resume_image %>" />
+            <% } %>
+        </div>
+    </div>
+    <div class="container">
+        <form method="post">
+            <div class="form-group">
+                <label for="resume_image_file" >学生个人照上传：</label>
+                <input type="file" id="resume_image_file">
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-2 row">
+                        <div class="col-xs-4">
+                            <button type="button" id="btnZoomIn" class="btn btn-sm btn-default">+</button>
+                        </div>
+                        <div class="col-xs-4">
+                            <button type="button" id="btnZoomOut" class="btn btn-sm btn-default">-</button>
+                        </div>
+                        <div class="col-xs-4">
+                            <button type="button" id="btnCrop" class="btn btn-sm btn-default">crop</button>
+                        </div>
+                    </div>
+                </div>
+                <% if(typeof(Student.resume_image) !== 'undefined'){ %>
+                <input type="hidden" id="resumeImg" name="resumeImg" value="<%= Student.resume_image %>"/>
+                <% }else { %>
+                <input type="hidden" id="resumeImg" name="resumeImg" value=""/>
+                <% } %>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">提交</button>
+        </form>
+    </div>
+</div>
+
+<!-- js -->
+<%- Loader('/public/backend/studentmgr_new.min.js')
+.js('/public/javascripts/libs/cropbox.js')
+.js('/public/javascripts/backend/studentMgr/editResume.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
