@@ -13,7 +13,7 @@ var StudentSchema = new Schema({
     resume_image:{type:String},         //申请摘要图片
 
     sort_content:{type:[]},               //分类信息列表
-	edu_type:{},
+	edu_type:{type:String},
 
     essay_list:{type:[{}]},                 //文书列表
 

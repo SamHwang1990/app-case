@@ -6,6 +6,7 @@ var sanitizer = require('sanitizer');
 var eventproxy = require('eventproxy');
 var util = require('utility');
 var _ = require('lodash');
+var mongoose = require('mongoose');
 
 var config = require('../../config').config;
 var Student = require('../../proxy').Student;
@@ -271,7 +272,8 @@ exports.showEditSort = function(req,res,next){
 					},
 					EduType:null,
 					EduTypes:types,
-					name:student.name
+					name:student.name,
+					studentId:studentId
 				})
 			});
 		}else{
@@ -286,7 +288,8 @@ exports.showEditSort = function(req,res,next){
 					},
 					EduType:type,
 					EduTypeDetails:details,
-					name:student.name
+					name:student.name,
+					studentId:studentId
 				})
 			});
 
@@ -294,4 +297,73 @@ exports.showEditSort = function(req,res,next){
 			Sort.getSortById(student.edu_type,ep.done('get_type'));
 		}
 	});
+};
+exports.editStudentSort = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	var options = req.body.optionList;
+	var eduTypeId = validator.trim(req.body.eduTypeId);
+
+	var ep = new eventproxy();
+	ep.fail(next);
+	ep.all('get_eduType','get_student',function(eduType, student){
+		if(eduType === null || eduType.grade !== 0)
+			return res.json({
+				'EditResult':false,
+				'msg':"留学类型出错，请刷新页面，重新提交！"
+			});
+
+		if(student === null)
+			return res.json({
+				'EditResult':false,
+				'msg':"学生信息出错，请刷新页面，重新提交！"
+			})
+
+		student.edu_type = eduTypeId;
+		student.sort_content = options;
+		student.save(function(err){
+			if(err)
+				return next(err);
+
+			return res.json({
+				'EditResult':true,
+				'msg':"保存成功！"
+			})
+		})
+	});
+
+	Sort.getSortById(eduTypeId,ep.done('get_eduType'));
+	Student.getStudentById(studentId,ep.done('get_student'));
+
+
+};
+exports.ajaxStudentSort = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		if(student === null){
+			return res.json({
+				'AjaxResult':false,
+				'msg':"学生信息出错，请刷新页面，重新提交！"
+			})
+		}
+
+		for(var i= 0;i < student.sort_content.length;i++){
+			Sort.getSortById(student.sort_content[i],function(err,sort){
+				if(sort === null)
+					student.sort_content.splice(i,1);
+			})
+		}
+
+		student.save(function(err){
+			if(err)
+				return next(err);
+
+			return res.json({
+				'AjaxResult':true,
+				'StudentOptions':student.sort_content
+			})
+		})
+	})
 };

@@ -1,12 +1,12 @@
 <div class="container ac_b_wrapper">
-    <div class="ac_callout ac_callout_danger hidden">
+    <div class="ac_header_callout ac_callout ac_callout_danger hidden">
         <% if (typeof(error) !== 'undefined' && error) { %>
         <p>出错：<%= error %></p>
         <% }else{ %>
         <p></p>
         <% } %>
     </div>
-    <div class="ac_callout ac_callout_info hidden">
+    <div class="ac_header_callout ac_callout ac_callout_info hidden">
         <% if (typeof(success) !== 'undefined' && success) { %>
         <p>成功：<%= success %></p>
         <% }else{ %>
@@ -16,6 +16,12 @@
 
     <div class="page-header">
         <h2>编辑学生分类信息：<%= name %></h2>
+        <% if(EduType === null){ %>
+        <input type="hidden" value="false" class="IsSignEduType" />
+        <% }else{ %>
+        <input type="hidden" value="true" class="IsSignEduType" data-typeId="<%= EduType._id %>"  />
+        <input type="hidden" value="<%= EduTypeDetails.length %>" class="EduTypeDetailsLength" data-studentId="<%= studentId %>" />
+        <% } %>
     </div>
 
     <% if(EduType === null){ %>
@@ -36,9 +42,11 @@
         <% } %>
     <% }else{ %>
     <div class="ac_callout ac_callout_primary">
-        <h4>留学类型：<%= EduType.name %></h4>
+        <h4>1. 留学类型：<%= EduType.name %></h4>
     </div>
     <% } %>
+
+    <% if(EduType !== null || (EduType === null && EduTypes.length > 0)){ %>
 
     <div class="row studentEditSort_itemList">
         <div class="col-sm-12 studentEditSort_info">
@@ -75,7 +83,7 @@
                         <select class="form-control" data-eduTypeItemId="<%= detail.EduTypeItem._id %>">
                             <option>请选择分类选项</option>
                             <% detail.EduTypeItemOptions.forEach(function(option){ %>
-                            <option data-eduTypeItemOptionId="<%= option._id %>"><%= option.name %></option>
+                            <option value="<%= option._id %>"><%= option.name %></option>
                             <% }) %>
                         </select>
                         <% } %>
@@ -84,9 +92,19 @@
             <% }) %>
         <% } %>
     </div>
+    <% } %>
+
+    <% if(EduType !== null || (EduType === null && EduTypes.length > 0)){ %>
+    <div class="row">
+        <div class="col-md-3">
+            <button class="submitSort btn btn-block btn-info btn-lg" data-studentId="<%= studentId %>">提交</button>
+        </div>
+    </div>
+    <% } %>
 </div>
 <!-- js -->
 <%- Loader('/public/backend/studentmgr_editSort.min.js')
+.js('/public/javascripts/backend/studentMgr/assert.js')
 .js('/public/javascripts/backend/studentMgr/editSort.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>

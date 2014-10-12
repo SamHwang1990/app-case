@@ -103,10 +103,14 @@ module.exports = function(app,express){
 		.get(backend.StudentMgr.delete);
 
 	backend_router.route(['/StudentMgr/EditSort/:studentId'])
-		.get(backend.StudentMgr.showEditSort);
+		.get(backend.StudentMgr.showEditSort)
+		.post(backend.StudentMgr.editStudentSort);
 	backend_router.route(['/StudentMgr/EditResume/:studentId']);
 
 	backend_router.route(['/StudentMgr/EditEssay/:studentId']);
+
+	backend_router.route(['/StudentMgr/GetSortContent/:studentId'])
+		.get(backend.StudentMgr.ajaxStudentSort);
 
 	//endregion
 };
