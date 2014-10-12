@@ -145,8 +145,9 @@ exports.getEduTypeDetails = function(eduType_id,callback){
 			return callback(null,null);
 
 		var details = [];
-		var detailItem = {};
+
 		_.forEach(items, function(item){
+			var detailItem = {};
 			detailItem.EduTypeItem = item;
 			detailItem.EduTypeItemOptions = _.filter(options,function(option){
 				return option.parent_id.toString() === item._id.toString();

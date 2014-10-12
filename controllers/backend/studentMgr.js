@@ -254,20 +254,44 @@ exports.delete = function(req,res,next){
 exports.showEditSort = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 
-	var ep = new eventproxy();
-	ep.all('getStudent','getEduTypes',function(student,eduTypes){
-		return res.render('backend/studentMgr/editSort',{
-			success:req.flash('success').toString(),
-			isBack:true,
-			topic:{
-				title:'编辑学生筛选信息 - 学生管理 - 后台管理 - ' + config.description
-			},
-			EduTypes:eduTypes,
-			name:student.name
-		})
-	});
-	ep.fail(next);
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
 
-	Student.getStudentById(studentId,ep.done('getStudent'));
-	Sort.getSortsByQuery({grade:0},{'ancestors':-1,'parent_id':-1},ep.done('getEduTypes'));
+		if(student.edu_type === null || typeof(student.edu_type) === 'undefined'){
+			Sort.getSortsByQuery({grade:0},{'ancestors':-1,'parent_id':-1},function(err, types){
+				if(err)
+					return next(err);
+
+				return res.render('backend/studentMgr/editSort',{
+					success:req.flash('success').toString(),
+					isBack:true,
+					topic:{
+						title:'编辑学生筛选信息 - 学生管理 - 后台管理 - ' + config.description
+					},
+					EduType:null,
+					EduTypes:types,
+					name:student.name
+				})
+			});
+		}else{
+			var ep = new eventproxy();
+			ep.fail(next);
+			ep.all('get_details','get_type',function(details, type){
+				return res.render('backend/studentMgr/editSort',{
+					success:req.flash('success').toString(),
+					isBack:true,
+					topic:{
+						title:'编辑学生筛选信息 - 学生管理 - 后台管理 - ' + config.description
+					},
+					EduType:type,
+					EduTypeDetails:details,
+					name:student.name
+				})
+			});
+
+			Sort.getEduTypeDetails(student.edu_type,ep.done('get_details'));
+			Sort.getSortById(student.edu_type,ep.done('get_type'));
+		}
+	});
 };

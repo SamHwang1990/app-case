@@ -18,71 +18,34 @@
         <h2>编辑学生分类信息：<%= name %></h2>
     </div>
 
-    <% if(EduType === null){ %>
-        <% if(EduTypes.length === 0){ %>
-        <h3 class="sortList_blank">筛选管理模块中无内容，请先<a href="/backend/SortMgr/New" title="添加筛选类型">添加数据</a>！</h3>
-        <% } else { %>
-            <div class="form-inline">
-                <div class="ac_callout ac_callout_primary">
-                    <h4>1. 请先选择留学类型：</h4>
-                    <p><small>一旦保存，留学类型则不能修改，请慎重！</small></p>
-                </div>
-                <% EduTypes.forEach(function(type){ %>
-                <button class="btn btn-lg btn-default" data-toggle="tooltip" data-placement="bottom" title="一旦保存，留学类型则不能修改，请慎重！">
-                    <%= type.name %>
-                </button>&emsp;
-                <% }) %>
-            </div>
-        <% } %>
-    <% }else{ %>
-    <div class="ac_callout ac_callout_primary">
-        <h4>留学类型：<%= EduType.name %></h4>
-    </div>
+    <% if(EduTypes.length === 0){ %>
+    <h3 class="sortList_blank">筛选管理模块中无内容，请先<a href="/backend/SortMgr/New" title="添加筛选类型">添加数据</a>！</h3>
     <% } %>
+
+    <div class="form-inline">
+        <div class="ac_callout ac_callout_primary">
+            <h4>1. 请先选择留学类型：</h4>
+            <p><small>一旦保存，留学类型则不能修改，请慎重！</small></p>
+        </div>
+        <% EduTypes.forEach(function(type){ %>
+        <button class="btn btn-lg btn-default" data-toggle="tooltip" data-placement="bottom" title="一旦保存，留学类型则不能修改，请慎重！">
+            <%= type.name %>
+        </button>&emsp;
+        <% }) %>
+    </div>
 
     <div class="row studentEditSort_itemList">
         <div class="col-sm-12 studentEditSort_info">
             <div class="ac_callout ac_callout_primary">
                 <h4>2. 选择筛选分类：</h4>
             </div>
-            <% if(EduType === null){ %>
-            <div class="ac_callout ac_callout_danger">
-                <p>先选择留学类型！</p>
-            </div>
-            <% } %>
-
-            <% if(EduType !== null && EduTypeDetails.length <= 0){ %>
             <div class="ac_callout ac_callout_danger">
                 <p>当前留学类型中无分类信息，<a href="javascript:void(0)" title="添加分类信息">请先添加</a>！</p>
             </div>
-            <% } %>
-
+            <div class="ac_callout ac_callout_danger">
+                <p>先选择留学类型！</p>
+            </div>
         </div>
-
-        <% if(EduType !== null && EduTypeDetails.length > 0){ %>
-            <% EduTypeDetails.forEach(function(detail){ %>
-                <div class="col-sm-3 studentEditSort_itemWrap">
-                    <div>
-                        <h3><%= detail.EduTypeItem.name %>&nbsp;<small><%= detail.EduTypeItem.description %></small></h3>
-
-                        <% if(detail.EduTypeItemOptions.length <= 0){ %>
-                        <p>该分类下无选项，请先<a href="/backend/SortMgr/EditDetails/<%= EduType._id %>" title="添加筛选分类">添加</a>！</p>
-                        <% } else { %>
-                        <select class="form-control" data-eduTypeItemId="<%= detail.EduTypeItem._id %>">
-                            <option>请选择分类选项</option>
-                            <% detail.EduTypeItemOptions.forEach(function(option){ %>
-                            <option data-eduTypeItemOptionId="<%= option._id %>"><%= option.name %></option>
-                            <% }) %>
-                        </select>
-
-                        <% } %>
-
-
-
-                    </div>
-                </div>
-            <% }) %>
-        <% } %>
         <div class="col-sm-3 studentEditSort_itemWrap">
             <div>
                 <h3>托福&nbsp;<small>总分120</small></h3>
