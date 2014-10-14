@@ -504,7 +504,7 @@ exports.newEssayItem = function(req,res,next){
 		var isExistEssay = _.find(student.essay_list, function(essay) {
 			return essay.title === essayTitle;
 		});
-		if(isExistEssay !== null && isExistEssay.length > 0){
+		if(isExistEssay !== null || isExistEssay.length > 0){
 			req.flash('error','文书标题已存在。');
 			error_render(req,res);
 			return;
@@ -520,14 +520,7 @@ exports.newEssayItem = function(req,res,next){
 		student.save(function(err){
 			if(err)
 				next(err);
-			return res.render('backend/studentMgr/showEssayList',{
-				success:req.flash('success').toString(),
-				isBack:true,
-				topic:{
-					title:'学生文书列表 - 学生管理 - 后台管理 - ' + config.description
-				},
-				Student:student
-			})
+			return res.redirect('/backend/StudentMgr/EssayList/' + studentId);
 		});
 	});
 };
