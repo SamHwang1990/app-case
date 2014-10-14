@@ -23,19 +23,28 @@
     </div>
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+        <% if(Student.essay_list.length <= 0){ %>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <%= Student.name %>目前还没有文书，请先<a href="/backend/StudentMgr/NewEssayItem/<%= Student._id %>" title="添加文书">添加</a>！
+            </div>
+        </div>
+        <% } %>
+
         <% for(var i=0; i< Student.essay_list.length; i++){ %>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <span class="badge">#<%= i+1 %></span>
-                    <a class="essayTopic" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <a class="essayTopic" data-toggle="collapse" data-parent="#accordion" href="#<%= Student.essay_list[i].title %>" aria-expanded="true" aria-controls="collapseOne">
                         <%= Student.essay_list[i].title %>
                     </a>
                     <a href="/backend/StudentMgr/EditEssayItem/<%= Student._id %>/<%= Student.essay_list[i]._id %>" class="btnEditEssayTitle btn btn-link btn-xs" title="编辑文书"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="/backend/StudentMgr/EditEssayItem/<%= Student._id %>/<%= Student.essay_list[i]._id %>" class="btnDeleteEssay btn btn-link btn-xs" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="/backend/StudentMgr/DeleteEssayItem/<%= Student._id %>/<%= Student.essay_list[i]._id %>" class="btnDeleteEssay btn btn-link btn-xs" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </h4>
             </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel">
+            <div id="<%= Student.essay_list[i].title %>" class="panel-collapse collapse" role="tabpanel">
                 <div class="panel-body">
                     <%- Student.essay_list[i].content %>
                 </div>
@@ -47,8 +56,7 @@
 </div>
 
 <!-- js -->
-<%- Loader('/public/backend/studentmgr_editEssay.min.js')
-.js('/public/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
-.js('/public/javascripts/backend/studentMgr/editEssay.js')
+<%- Loader('/public/backend/studentmgr_showEssayList.min.js')
+.js('/public/javascripts/backend/studentMgr/showEssayList.js')
 .done(assets, config.site_static_host, config.mini_assets)
 %>

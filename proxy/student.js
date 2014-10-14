@@ -4,6 +4,8 @@
 var models = require('../models');
 var Student = models.Student;
 var utility = require('utility');
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 
 /**
  * 根据学生名列表查找学生
@@ -96,4 +98,17 @@ exports.newAndSave = function (name, name_en, email, is_block, remark, profileIm
 
 exports.removeStudentById = function(studentId,callback){
 	Student.remove({_id:studentId},callback);
+};
+
+exports.removeStudentEssayById = function(studentId,essayId,callback){
+	Student.findOneAndUpdate(
+		{_id: studentId},
+		{$pull: {essay_list: {_id: ObjectId(essayId)}}},
+		function(err, student) {
+			if(err)
+				return callback(err,null);
+			else
+				return callback(null,student);
+		}
+	);
 };

@@ -118,6 +118,9 @@ module.exports = function(app,express){
 		.get(backend.StudentMgr.showNewEssayItem)
 		.post(backend.StudentMgr.newEssayItem);
 
+	backend_router.route(['/StudentMgr/DeleteEssayItem/:studentId/:essayId'])
+		.get(backend.StudentMgr.deleteEssayItem);
+
 
 
 	//endregion

@@ -7,6 +7,7 @@ var eventproxy = require('eventproxy');
 var util = require('utility');
 var _ = require('lodash');
 var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 
 var config = require('../../config').config;
 var Student = require('../../proxy').Student;
@@ -501,26 +502,49 @@ exports.newEssayItem = function(req,res,next){
 			return;
 		}
 
-		var isExistEssay = _.find(student.essay_list, function(essay) {
-			return essay.title === essayTitle;
+		Student.getStudentsByQuery({
+			'_id':studentId,
+			'essay_list.title':essayTitle
+		},{},function(err, students){
+			if(students.length > 0){
+				req.flash('error','文书标题已存在。');
+				error_render(req,res);
+				return;
+			}
+			var essayId = new ObjectId;
+			student.essay_list.push({
+				_id:essayId,
+				title:essayTitle,
+				content:essayContent
+			});
+			student.save(function(err){
+				if(err)
+					next(err);
+				return res.redirect('/backend/StudentMgr/EssayList/' + studentId);
+			});
 		});
-		if(isExistEssay !== null || isExistEssay.length > 0){
-			req.flash('error','文书标题已存在。');
-			error_render(req,res);
-			return;
+
+
+	});
+};
+exports.deleteEssayItem = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	var essayId = validator.trim(req.params.essayId);
+
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+		if(student === null){
+			req.flash('error','学生信息不存在，请刷新页面！');
+			res.render('notify/notify', {error: req.flash('error').toString()});
+			return ;
 		}
 
-		var ObjectId = mongoose.Types.ObjectId;
-		var essayId = new ObjectId;
-		student.essay_list.push({
-			_id:essayId,
-			title:essayTitle,
-			content:essayContent
-		});
-		student.save(function(err){
+		Student.removeStudentEssayById(studentId,essayId,function(err, student){
 			if(err)
-				next(err);
+				return next(err);
+			req.flash('success','文书删除成功。');
 			return res.redirect('/backend/StudentMgr/EssayList/' + studentId);
 		});
-	});
+	})
 };
