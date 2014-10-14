@@ -1,0 +1,89 @@
+<%- Loader('/public/backend/studentmgr_showNewEssayItem.css')
+.css('/public/bower_components/pen/src/pen.css')
+.done(assets, config.site_static_host, config.mini_assets)
+%>
+<style>
+
+#essayContent{
+    min-height: 200px;
+    box-sizing: border-box;
+    padding: 20px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 2em;
+    background-color: #fff;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+
+</style>
+
+<div class="container ac_b_wrapper">
+    <div class="ac_header_callout ac_callout ac_callout_danger hidden">
+        <% if (typeof(error) !== 'undefined' && error) { %>
+        <p>出错：<%= error %></p>
+        <% }else{ %>
+        <p></p>
+        <% } %>
+    </div>
+    <div class="ac_header_callout ac_callout ac_callout_info hidden">
+        <% if (typeof(success) !== 'undefined' && success) { %>
+        <p>成功：<%= success %></p>
+        <% }else{ %>
+        <p></p>
+        <% } %>
+    </div>
+
+    <div class="page-header">
+        <h2>学生姓名：<%= Student.name %></h2>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>
+                添加文书：
+            </h2>
+            <form class="form-horizontal" method="post">
+                <div class="form-group">
+                    <label for="essayTitle" class="col-sm-2 control-label">标题：</label>
+                    <div class="col-sm-4">
+                        <% if(typeof(essayTitle) !== 'undefined'){ %>
+                        <input type="text" class="form-control" id="essayTitle" name="essayTitle" placeholder="请输入文书标题" value="<%= essayTitle %>" />
+                        <% } else { %>
+                        <input type="text" class="form-control" id="essayTitle" name="essayTitle" placeholder="请输入文书标题" />
+                        <% } %>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="essayContent" class="col-sm-2 control-label">文书内容：</label>
+                    <div class="col-sm-10">
+                        <% if(typeof(essayContent) !== 'undefined'){ %>
+                        <div id="essayContent">
+                            <%= essayContent %>
+                        </div>
+                        <% } else { %>
+                        <div id="essayContent">
+                        </div>
+                        <% } %>
+                        <input type="hidden" id="inputEssayContent" name="essayContent" value />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary btn-lg">提交</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<!-- js -->
+<%- Loader('/public/backend/studentmgr_showNewEssayItem.min.js')
+.js('/public/bower_components/pen/src/pen.js')
+.js('/public/bower_components/pen/src/markdown.js')
+.js('/public/javascripts/backend/studentMgr/assert.js')
+.js('/public/javascripts/backend/studentMgr/showNewEssayItem.js')
+.done(assets, config.site_static_host, config.mini_assets)
+%>

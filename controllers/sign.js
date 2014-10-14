@@ -96,7 +96,7 @@ exports.signup = function(req,res,next){
         //create gravatar
         var avatar_url = User.makeGravatar(email);
 
-        User.newAndSave(name,name_en,pass,email,avatar_url,true,Date(),null,function(err, user){
+        User.newAndSave(name,name_en,pass,email,avatar_url,true,function(err, user){
             if (err) {
                 return next(err);
             }

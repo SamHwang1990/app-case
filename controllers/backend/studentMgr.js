@@ -6,6 +6,7 @@ var sanitizer = require('sanitizer');
 var eventproxy = require('eventproxy');
 var util = require('utility');
 var _ = require('lodash');
+var mongoose = require('mongoose');
 
 var config = require('../../config').config;
 var Student = require('../../proxy').Student;
@@ -437,5 +438,96 @@ exports.editStudentResume = function(req,res,next){
 
 			return res.redirect('/backend/StudentMgr/List');
 		})
+	});
+};
+
+exports.showEssayList = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		return res.render('backend/studentMgr/showEssayList',{
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'学生文书列表 - 学生管理 - 后台管理 - ' + config.description
+			},
+			Student:student
+		})
+	});
+};
+
+exports.showNewEssayItem = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		res.render('backend/studentMgr/newEssayItem',{
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'新建学生文书 - 学生管理 - 后台管理 - ' + config.description
+			},
+			Student:student
+		})
+	})
+};
+exports.newEssayItem = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	var essayTitle = validator.trim(req.body.essayTitle);
+	essayTitle = sanitizer.sanitize(essayTitle);
+	var essayContent = validator.trim(req.body.essayContent);
+	essayContent = sanitizer.sanitize(essayContent);
+
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		var error_render = function(req, res){
+			res.render('backend/studentMgr/newEssayItem', {
+				error: req.flash('error').toString(),
+				isBack:true,
+				topic:{
+					title:'新建学生文书 - 学生管理 - 后台管理 - ' + config.description
+				},
+				Student:student,essayTitle:essayTitle,essayContent:essayContent});
+		};
+
+		if(essayTitle === '' || essayContent === ''){
+			req.flash('error','信息不完整。');
+			error_render(req,res);
+			return;
+		}
+
+		var isExistEssay = _.find(student.essay_list, function(essay) {
+			return essay.title === essayTitle;
+		});
+		if(isExistEssay !== null && isExistEssay.length > 0){
+			req.flash('error','文书标题已存在。');
+			error_render(req,res);
+			return;
+		}
+
+		var ObjectId = mongoose.Types.ObjectId;
+		var essayId = new ObjectId;
+		student.essay_list.push({
+			_id:essayId,
+			title:essayTitle,
+			content:essayContent
+		});
+		student.save(function(err){
+			if(err)
+				next(err);
+			return res.render('backend/studentMgr/showEssayList',{
+				success:req.flash('success').toString(),
+				isBack:true,
+				topic:{
+					title:'学生文书列表 - 学生管理 - 后台管理 - ' + config.description
+				},
+				Student:student
+			})
+		});
 	});
 };

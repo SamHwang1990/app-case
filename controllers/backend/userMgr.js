@@ -267,7 +267,7 @@ exports.new = function(req, res, next){
 			//res.render('notify/notify', {success: '注册成功，请登录！'});
 		});
 	});
-}
+};
 
 exports.delete = function(req,res,next){
 	var email = validator.trim(req.params.user_email);

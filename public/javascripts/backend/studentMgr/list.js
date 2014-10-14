@@ -112,11 +112,11 @@ $(function(){
 					value +
 					'">修改案例</a>');
 
-				execArray.push('<a href="/backend/StudentMgr/EditEssay/' +
+				execArray.push('<a href="/backend/StudentMgr/EssayList/' +
 					value +
 					'" title="' +
 					value +
-					'">修改文书</a>');
+					'">查看文书</a>');
 
 				execArray.push('<a href="/backend/StudentMgr/Delete/' +
 					value +

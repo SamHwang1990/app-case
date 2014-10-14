@@ -111,7 +111,12 @@ module.exports = function(app,express){
 		.get(backend.StudentMgr.showEditResume)
 		.post(backend.StudentMgr.editStudentResume);
 
-	backend_router.route(['/StudentMgr/EditEssay/:studentId']);
+	backend_router.route(['/StudentMgr/EssayList/:studentId'])
+		.get(backend.StudentMgr.showEssayList);
+
+	backend_router.route(['/StudentMgr/NewEssayItem/:studentId'])
+		.get(backend.StudentMgr.showNewEssayItem)
+		.post(backend.StudentMgr.newEssayItem);
 
 
 
