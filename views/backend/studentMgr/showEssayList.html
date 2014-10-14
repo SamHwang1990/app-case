@@ -44,7 +44,7 @@
                     <a href="/backend/StudentMgr/DeleteEssayItem/<%= Student._id %>/<%= Student.essay_list[i]._id %>" class="btnDeleteEssay btn btn-link btn-xs" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </h4>
             </div>
-            <div id="<%= Student.essay_list[i].title %>" class="panel-collapse collapse" role="tabpanel">
+            <div id="<%= Student.essay_list[i].title %>" class="panel-collapse collapse <%= i==0?'in':'' %>" role="tabpanel">
                 <div class="panel-body">
                     <%- Student.essay_list[i].content %>
                 </div>

@@ -548,3 +548,89 @@ exports.deleteEssayItem = function(req,res,next){
 		});
 	})
 };
+
+exports.showEditEssayItem = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	var essayId = validator.trim(req.params.essayId);
+
+	Student.getStudentsByQuery({
+		'_id':studentId,
+		'essay_list._id':ObjectId(essayId)
+	},{},function(err, students){
+		if(err)
+			return next(err);
+
+		if(students.length <= 0){
+			req.flash('error','信息错误，请返回文书列表！');
+			res.render('notify/notify', {error: req.flash('error').toString()});
+			return;
+		}
+
+		var essay = students[0].essay_list.filter(function (essay) {
+			return essay._id.toString() === ObjectId(essayId).toString();
+		}).pop();
+
+		res.render('backend/studentMgr/editEssayItem',{
+			success:req.flash('success').toString(),
+			isBack:true,
+			topic:{
+				title:'修改学生文书 - 学生管理 - 后台管理 - ' + config.description
+			},
+			Student:students[0],
+			essayTitle:essay.title,essayContent:essay.content})
+	});
+};
+exports.editEssayItem = function(req,res,next){
+	var studentId = validator.trim(req.params.studentId);
+	var essayId = validator.trim(req.params.essayId);
+
+	var essayTitle = validator.trim(req.body.essayTitle);
+	essayTitle = sanitizer.sanitize(essayTitle);
+	var essayContent = validator.trim(req.body.essayContent);
+	essayContent = sanitizer.sanitize(essayContent);
+
+
+	Student.getStudentsByQuery({
+		'_id':studentId,
+		'essay_list._id':ObjectId(essayId)
+	},{},function(err, students){
+		if(err)
+			return next(err);
+
+		if(students.length <= 0){
+			req.flash('error','信息错误，请返回文书列表！。');
+			res.render('notify/notify', {error: req.flash('error').toString()});
+			return;
+		}
+
+		var student = students[0];
+		var error_render = function(req, res){
+			res.render('backend/studentMgr/editEssayItem', {
+				error: req.flash('error').toString(),
+				isBack:true,
+				topic:{
+					title:'修改学生文书 - 学生管理 - 后台管理 - ' + config.description
+				},
+				Student:student,essayTitle:essayTitle,essayContent:essayContent});
+		};
+
+		var essay = student.essay_list.filter(function (essay) {
+			return essay._id.toString() === ObjectId(essayId).toString();
+		}).pop();
+
+		var tempEssay = student.essay_list.filter(function (tempEssay) {
+			return tempEssay._id.toString() !== ObjectId(essayId).toString() && tempEssay.title === essayTitle;
+		}).pop();
+		if(typeof(tempEssay) !== 'undefined'){
+			req.flash('error','文书标题已存在。');
+			error_render(req,res);
+			return;
+		}
+
+		Student.updateStudentEssayItem(studentId,essayId,essayTitle,essayContent,function(err){
+			if(err)
+				return next(err);
+			return res.redirect('/backend/StudentMgr/EssayList/' + studentId);
+		});
+	});
+};

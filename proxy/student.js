@@ -112,3 +112,11 @@ exports.removeStudentEssayById = function(studentId,essayId,callback){
 		}
 	);
 };
+
+exports.updateStudentEssayItem = function(studentId,essayId,essayTitle,essayContent,callback){
+	Student.update(
+		{_id: studentId,"essay_list._id":ObjectId(essayId)},
+		{ $set: { "essay_list.$.title": essayTitle,"essay_list.$.content": essayContent } },
+		callback
+	)
+};
