@@ -92,7 +92,7 @@ exports.newAndSave = function (name, name_en, email, is_block, remark, profileIm
 	student.remark = remark;
 	student.profile_image = profileImg;
 	student.create_date = Date();
-	student.create_date = student.create_date;
+	student.last_edit_date = student.create_date;
 	student.save(callback);
 };
 
@@ -116,7 +116,7 @@ exports.removeStudentEssayById = function(studentId,essayId,callback){
 exports.updateStudentEssayItem = function(studentId,essayId,essayTitle,essayContent,callback){
 	Student.update(
 		{_id: studentId,"essay_list._id":ObjectId(essayId)},
-		{ $set: { "essay_list.$.title": essayTitle,"essay_list.$.content": essayContent } },
+		{ $set: { "essay_list.$.title": essayTitle,"essay_list.$.content": essayContent,'last_edit_date':Date() } },
 		callback
 	)
 };

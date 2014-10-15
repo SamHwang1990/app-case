@@ -253,6 +253,7 @@ exports.editStudent = function(req,res,next){
 			student.remark = remark;
 			student.profile_image = profileImg;
 			student.is_block = is_block;
+			student.last_edit_date = Date();
 
 			student.save(function(err){
 				if(err)
@@ -391,6 +392,7 @@ exports.editStudentSort = function(req,res,next){
 
 
 		student.sort_content = options;
+		student.last_edit_date = Date();
 		student.save(function(err){
 			if(err)
 				return next(err);
@@ -483,6 +485,7 @@ exports.editStudentResume = function(req,res,next){
 		}
 
 		student.resume_image = resumeImg;
+		student.last_edit_date = Date();
 		student.save(function(err){
 			if(err)
 				return next(err);

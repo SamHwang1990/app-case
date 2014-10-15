@@ -60,6 +60,8 @@ exports.newEduType = function(req,res,next){
 	description = sanitizer.sanitize(description);
 	var remark = validator.trim(req.body.remark);
 	remark = sanitizer.sanitize(remark);
+	var importance = validator.trim(req.body.importance);
+	importance = sanitizer.sanitize(importance);
 
 	var error_render = function(req, res){
 		res.render('backend/sortMgr/new', {
@@ -96,6 +98,23 @@ exports.newEduType = function(req,res,next){
 		return;
 	}
 
+	if(importance === ''){
+		importance = 5;
+	}else{
+		if(!validator.isInt(importance)){
+			req.flash('error','重要性指数只能是1-5 的整数');
+			error_render(req,res);
+			return;
+		}else{
+			importance = parseInt(importance);
+			if(importance < 1 || importance > 5){
+				req.flash('error','重要性指数只能是1-5 的整数');
+				error_render(req,res);
+				return;
+			}
+		}
+	}
+
 	Sort.getSortsByQuery({
 		grade:0,
 		$or:[
@@ -111,7 +130,7 @@ exports.newEduType = function(req,res,next){
 			return;
 		}
 
-		Sort.newAndSaveEduType(name, slug, description, remark, function(err, sort){
+		Sort.newAndSaveEduType(name, slug, description, remark, importance, function(err, sort){
 			if(err)
 				return next(err);
 
@@ -226,6 +245,7 @@ exports.showEditEduType = function(req,res,next){
 			_id:sort._id,
 			name:sort.name,
 			slug:sort.slug,
+			importance:sort.importance,
 			description:sort.description,
 			remark:sort.remark
 		})
@@ -261,6 +281,8 @@ exports.editEduType = function(req,res,next){
 	description = sanitizer.sanitize(description);
 	var remark = validator.trim(req.body.remark);
 	remark = sanitizer.sanitize(remark);
+	var importance = validator.trim(req.body.importance);
+	importance = sanitizer.sanitize(importance);
 
 	var error_render = function(req, res){
 		res.render('backend/sortMgr/edit', {
@@ -297,6 +319,23 @@ exports.editEduType = function(req,res,next){
 		return;
 	}
 
+	if(importance === ''){
+		importance = 5;
+	}else{
+		if(!validator.isInt(importance)){
+			req.flash('error','重要性指数只能是1-5 的整数');
+			error_render(req,res);
+			return;
+		}else{
+			importance = parseInt(importance);
+			if(importance < 1 || importance > 5){
+				req.flash('error','重要性指数只能是1-5 的整数');
+				error_render(req,res);
+				return;
+			}
+		}
+	}
+
 	Sort.getSortById(_id,function(err,sort){
 		if(err)
 			return next(err);
@@ -323,6 +362,7 @@ exports.editEduType = function(req,res,next){
 
 			sort.name = name;
 			sort.slug = slug;
+			sort.importance = importance;
 			sort.description = description;
 			sort.remark = remark;
 

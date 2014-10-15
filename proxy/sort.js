@@ -56,13 +56,14 @@ exports.getSortsByQuery = function (query, opt, callback) {
 	Sort.find(query, {}, opt, callback);
 };
 
-exports.newAndSaveEduType = function(name, slug, description, remark, callback){
+exports.newAndSaveEduType = function(name, slug, description, remark,importance, callback){
 	var eduType = new Sort();
 	eduType.name = name;
 	eduType.slug = slug;
 	eduType.description = description;
 	eduType.remark = remark;
 	eduType.grade = 0;
+	eduType.importance = importance;
 	eduType.ancestors = null;
 	eduType.parent_id = null;
 

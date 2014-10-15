@@ -53,6 +53,14 @@
                     <textarea class="form-control" name="remark" placeholder="留学类型备注，管理人员所用"></textarea>
                     <% } %>
                 </div>
+                <div class="form-group">
+                    <label for="importance">5. 留学类型重要性</label>
+                    <% if(typeof(importance) !== 'undefined'){ %>
+                    <input type="text" class="form-control" name="importance" placeholder="1-5整数，值越小越重要，默认值：5" value="<%= importance %>" />
+                    <% }else { %>
+                    <input type="text" class="form-control" name="importance" placeholder="1-5整数，值越小越重要，默认值：5" />
+                    <% } %>
+                </div>
                 <button type="submit" class="btn btn-primary btn-lg">保存</button>
             </form>
         </div>
