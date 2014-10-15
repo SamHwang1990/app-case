@@ -110,7 +110,7 @@ exports.newAndSaveEduTypeItemOrOption = function(name, slug, grade, description,
  * @param {Function} callback 回调函数
  */
 exports.getEduTypes = function(callback){
-	Sort.find({grade:0},callback);
+	Sort.find({grade:0},{},{sort:{importance:1}},callback);
 };
 
 /**

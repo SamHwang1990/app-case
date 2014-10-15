@@ -11,8 +11,9 @@ var auth = require('./middlewares/auth');
 
 module.exports = function(app,express){
 
-    // home page Test
+    // home page
     app.get('/', site.index);
+	app.get('/EduType/:typeId', site.showEduType);
 
     //student list page
     app.get('/list',site.list);

@@ -73,19 +73,16 @@
                     <li>
                         <a href="/backend/StudentMgr/List">学生管理</a>
                     </li>
+                <% } else if(EduTypes.length <= 0) { %>
+                    <li>
+                        无分类，请先<a href="/backend/SortMgr/New">添加</a>!
+                    </li>
                 <% } else { %>
-                    <li>
-                        <a href="/">本科</a>
-                    </li>
-                    <li>
-                        <a href="/list">高中</a>
-                    </li>
-                    <li>
-                        <a href="/resume">研究生</a>
-                    </li>
-                    <li>
-                        <a href="#">本科转学</a>
-                    </li>
+                    <% EduTypes.forEach(function(type){ %>
+                        <li>
+                            <a href="/EduType/<%= type._id %>"><%= type.name %></a>
+                        </li>
+                    <% }) %>
                 <% } %>
             </ul>
             <ul class="nav navbar-nav navbar-right">
