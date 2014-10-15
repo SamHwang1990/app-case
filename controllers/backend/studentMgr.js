@@ -13,6 +13,9 @@ var config = require('../../config').config;
 var Student = require('../../proxy').Student;
 var Sort = require('../../proxy').Sort;
 
+/*
+ * 渲染StudentList 页面，这里不会传数据，交给ajaxStudentList 相应ajax请求
+ * */
 exports.showStudentList = function(req,res,next){
 	res.render('backend/studentMgr/list',{
 		success:req.flash('success').toString(),
@@ -22,6 +25,9 @@ exports.showStudentList = function(req,res,next){
 		}
 	})
 };
+/*
+* 从数据库中读取所有Student 的信息，并返回json 数据
+* */
 exports.ajaxStudentList = function(req,res,next){
 	var proxy = eventproxy.create('students',
 		function (students) {
@@ -37,7 +43,9 @@ exports.ajaxStudentList = function(req,res,next){
 		});
 	}))
 };
-
+/*
+* 渲染New Student 页面
+* */
 exports.showNew = function(req,res,next){
 	res.render('backend/studentMgr/new',{
 		success:req.flash('success').toString(),
@@ -47,6 +55,9 @@ exports.showNew = function(req,res,next){
 		}
 	})
 };
+/*
+* 接受POST 过来的New Student 信息，进行验证和Save
+* */
 exports.newStudent = function(req,res,next){
 	var name = validator.trim(req.body.name);
 	name = sanitizer.sanitize(name);
@@ -102,6 +113,7 @@ exports.newStudent = function(req,res,next){
 		return;
 	}
 
+	//检测Email 是否已存在
 	Student.getStudentByMail(email,function(err,student){
 		if(err)
 			return next(err);
@@ -121,7 +133,9 @@ exports.newStudent = function(req,res,next){
 		});
 	});
 };
-
+/*
+* 相应GET 请求，渲染Edit Student 页面
+* */
 exports.showEdit = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	Student.getStudentById(studentId,function(err,student){
@@ -143,6 +157,9 @@ exports.showEdit = function(req,res,next){
 		})
 	});
 };
+/*
+* 接受POST 请求，处理Edit Student，进行验证和Update
+* */
 exports.editStudent = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 
@@ -200,6 +217,7 @@ exports.editStudent = function(req,res,next){
 		return;
 	}
 
+	//检测学生信息是否存在
 	Student.getStudentById(studentId,function(err,student){
 		if(err)
 			return next(err);
@@ -210,6 +228,12 @@ exports.editStudent = function(req,res,next){
 			return;
 		}
 
+
+		/*
+		* 查询是否存在一条记录，id 不是学生的id，email 地址与请求中的email 地址一样
+		* 如果有，则表示邮箱地址重复，报错！
+		* 否则，可以保存email
+		* */
 		Student.getStudentsByQuery({
 			'_id':{$ne:studentId},
 			'email':email
@@ -241,7 +265,9 @@ exports.editStudent = function(req,res,next){
 
 	});
 };
-
+/*
+* 接受GET 请求，根据学生ID 进行验证和Delete
+* */
 exports.delete = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 
@@ -252,7 +278,9 @@ exports.delete = function(req,res,next){
 		res.redirect('/backend/StudentMgr/List');
 	})
 };
-
+/*
+ * 相应GET 请求，渲染Edit Student Sort 页面
+ * */
 exports.showEditSort = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 
@@ -260,6 +288,11 @@ exports.showEditSort = function(req,res,next){
 		if(err)
 			return next(err);
 
+		/*
+		* 检测当前学生的留学类型为空
+		* 是，则从Sorts 中查找所有EduType，并传入模板渲染
+		* 否，则获取其EduType 及EduType 的Details，还要进行验证这些数据是否还存在数据库
+		* */
 		if(student.edu_type === null || typeof(student.edu_type) === 'undefined'){
 			Sort.getSortsByQuery({grade:0},{'ancestors':-1,'parent_id':-1},function(err, types){
 				if(err)
@@ -278,10 +311,12 @@ exports.showEditSort = function(req,res,next){
 				})
 			});
 		}else{
-			//还要检测学生的留学类型是否还存在，如果不存在了，则要删除学生的edu_type、sort_content 值
+			//还要检测学生的留学类型是否还存在Sort集合中，如果不存在了，则要删除学生的edu_type、sort_content 值
 			var ep = new eventproxy();
 			ep.fail(next);
 			ep.all('get_details','get_type',function(details, type){
+				//如果根据学生的edu_type 查找到的Sort 为空，则清空edu_type 和 sort_content 的内容
+				//然后从Sorts 集合中查找所有EduType，并传入模板
 				if(type === null) {
 					student.edu_type = null;
 					student.sort_content = null;
@@ -328,6 +363,9 @@ exports.showEditSort = function(req,res,next){
 		}
 	});
 };
+/*
+* 接受POST 请求，处理Edit Student Sort，进行验证和Update
+* */
 exports.editStudentSort = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	var options = req.body.optionList;
@@ -369,6 +407,9 @@ exports.editStudentSort = function(req,res,next){
 
 
 };
+/*
+* 响应AJAX 请求，从Sorts 集合中获取学生的sort_content
+* */
 exports.ajaxStudentSort = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	Student.getStudentById(studentId,function(err,student){
@@ -382,6 +423,10 @@ exports.ajaxStudentSort = function(req,res,next){
 			})
 		}
 
+		/*
+		* 检测sort_content 中所有的options 是否还存在Sorts 集合中
+		* 如果否，则从student.sort_content 中删掉
+		* */
 		for(var i= 0;i < student.sort_content.length;i++){
 			Sort.getSortById(student.sort_content[i],function(err,sort){
 				if(sort === null)
@@ -400,7 +445,9 @@ exports.ajaxStudentSort = function(req,res,next){
 		})
 	})
 };
-
+/*
+* 相应GET 请求，渲染Edit Student Resume 页面
+* */
 exports.showEditResume = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 
@@ -418,6 +465,9 @@ exports.showEditResume = function(req,res,next){
 		})
 	})
 };
+/*
+* 接受POST 请求，处理Edit Student Resume，进行验证和Update
+* */
 exports.editStudentResume = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	var resumeImg = validator.trim(req.body.resumeImg);
@@ -441,7 +491,9 @@ exports.editStudentResume = function(req,res,next){
 		})
 	});
 };
-
+/*
+* 相应GET 请求，渲染Edit Student Essay List 页面
+* */
 exports.showEssayList = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	Student.getStudentById(studentId,function(err,student){
@@ -458,7 +510,9 @@ exports.showEssayList = function(req,res,next){
 		})
 	});
 };
-
+/*
+ * 相应GET 请求，渲染New Student Essay 页面
+ * */
 exports.showNewEssayItem = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	Student.getStudentById(studentId,function(err,student){
@@ -475,6 +529,9 @@ exports.showNewEssayItem = function(req,res,next){
 		})
 	})
 };
+/*
+ * 接受POST 请求，处理new Student Essay，进行验证和Save
+ * */
 exports.newEssayItem = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	var essayTitle = validator.trim(req.body.essayTitle);
@@ -502,6 +559,7 @@ exports.newEssayItem = function(req,res,next){
 			return;
 		}
 
+		//检测student 的essay_list 中是否有同名的Essay
 		Student.getStudentsByQuery({
 			'_id':studentId,
 			'essay_list.title':essayTitle
@@ -527,6 +585,9 @@ exports.newEssayItem = function(req,res,next){
 
 	});
 };
+/*
+ * 接受GET 请求，根据学生ID 和Essay Item ID 进行验证和Delete
+ * */
 exports.deleteEssayItem = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	var essayId = validator.trim(req.params.essayId);
@@ -548,11 +609,14 @@ exports.deleteEssayItem = function(req,res,next){
 		});
 	})
 };
-
+/*
+ * 相应GET 请求，渲染Edit Student Essay 页面
+ * */
 exports.showEditEssayItem = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	var essayId = validator.trim(req.params.essayId);
 
+	//检测student 的essay_list 中是否有给定ID 的文书
 	Student.getStudentsByQuery({
 		'_id':studentId,
 		'essay_list._id':ObjectId(essayId)
@@ -566,6 +630,7 @@ exports.showEditEssayItem = function(req,res,next){
 			return;
 		}
 
+		//返回student 的essay_list 中包含给定ID 的文书对象
 		var essay = students[0].essay_list.filter(function (essay) {
 			return essay._id.toString() === ObjectId(essayId).toString();
 		}).pop();
@@ -580,6 +645,9 @@ exports.showEditEssayItem = function(req,res,next){
 			essayTitle:essay.title,essayContent:essay.content})
 	});
 };
+/*
+ * 接受POST 请求，处理edit Student Essay，进行验证和Update
+ * */
 exports.editEssayItem = function(req,res,next){
 	var studentId = validator.trim(req.params.studentId);
 	var essayId = validator.trim(req.params.essayId);
@@ -589,7 +657,7 @@ exports.editEssayItem = function(req,res,next){
 	var essayContent = validator.trim(req.body.essayContent);
 	essayContent = sanitizer.sanitize(essayContent);
 
-
+	//检测student 的essay_list 中是否有包含给定ID 的文书
 	Student.getStudentsByQuery({
 		'_id':studentId,
 		'essay_list._id':ObjectId(essayId)
@@ -614,10 +682,7 @@ exports.editEssayItem = function(req,res,next){
 				Student:student,essayTitle:essayTitle,essayContent:essayContent});
 		};
 
-		var essay = student.essay_list.filter(function (essay) {
-			return essay._id.toString() === ObjectId(essayId).toString();
-		}).pop();
-
+		//检测student 的essay_list 是否存在不同ID，但有一样标题的essay，如果有，则报错，文书标题重复
 		var tempEssay = student.essay_list.filter(function (tempEssay) {
 			return tempEssay._id.toString() !== ObjectId(essayId).toString() && tempEssay.title === essayTitle;
 		}).pop();
