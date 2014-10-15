@@ -2,6 +2,8 @@
 * AppCase - site index controller.
 * Copyright(c) 2014 samhwang1990@gmail.com
 * */
+
+var validator = require('validator');
 var eventproxy = require('eventproxy');
 var util = require('utility');
 var _ = require('lodash');
@@ -52,6 +54,36 @@ exports.showEduType = function(req,res,next){
 
 	Sort.getEduTypeDetails(typeId,ep.done('get_typeDetail'));
 	Sort.getSortById(typeId,ep.done('get_currentType'));
+};
+
+exports.showOptionStudentList = function(req,res,next){
+	var typeId = req.params.typeId;
+	var optionId = req.params.optionId;
+	var listPage = req.params.page;
+
+	if(listPage === null || listPage === '' || !validator.isInt(listPage))
+		listPage = 1;
+	else
+		listPage = parseInt(listPage);
+
+	Student.getStudentsByQuery({
+		'sort_content':optionId
+	},{
+		skip:(listPage-1) * 8,
+		limit:8
+	},function(err, students){
+		if(err)
+			next(err);
+		return res.render('frontend/index',{
+			success:req.flash('success'),
+			topic:{
+				title:config.description
+			},
+			Students:students,
+			EduTypeId:typeId,
+			CurrentPage:listPage
+		});
+	})
 };
 
 exports.list = function(req,res,next){
