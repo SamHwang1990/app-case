@@ -26,7 +26,6 @@ exports.index = function(req,res,next){
 					title:config.description
 				},
 				CurrentType:types[0],
-				EduTypes:types,
 				Details:details
 			});
 		});
@@ -40,23 +39,19 @@ exports.showEduType = function(req,res,next){
 
 	var ep = new eventproxy();
 	ep.fail(next);
-	ep.all('get_typeDetail','get_types','get_currentType',function(details,types,currentType){
+	ep.all('get_typeDetail','get_currentType',function(details,currentType){
 		return res.render('frontend/index',{
 			success:req.flash('success'),
 			topic:{
 				title:config.description
 			},
 			CurrentType:currentType,
-			EduTypes:types,
 			Details:details
 		});
 	});
 
 	Sort.getEduTypeDetails(typeId,ep.done('get_typeDetail'));
 	Sort.getSortById(typeId,ep.done('get_currentType'));
-	Sort.getEduTypes(ep.done('get_types'));
-
-
 };
 
 exports.list = function(req,res,next){

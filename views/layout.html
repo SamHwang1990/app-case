@@ -73,16 +73,18 @@
                     <li>
                         <a href="/backend/StudentMgr/List">学生管理</a>
                     </li>
-                <% } else if(EduTypes.length <= 0) { %>
-                    <li>
-                        无分类，请先<a href="/backend/SortMgr/New">添加</a>!
-                    </li>
                 <% } else { %>
-                    <% EduTypes.forEach(function(type){ %>
+                    <% if(CMTypes.length <= 0) { %>
                         <li>
-                            <a href="/EduType/<%= type._id %>"><%= type.name %></a>
+                            无分类，请先<a href="/backend/SortMgr/New">添加</a>!
                         </li>
-                    <% }) %>
+                    <% } else { %>
+                        <% CMTypes.forEach(function(type){ %>
+                            <li>
+                                <a href="/EduType/<%= type._id %>"><%= type.name %></a>
+                            </li>
+                        <% }) %>
+                    <% } %>
                 <% } %>
             </ul>
             <ul class="nav navbar-nav navbar-right">

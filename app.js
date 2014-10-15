@@ -26,6 +26,7 @@ var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
 var stylus = require('stylus');
 var nib = require('nib');
+var renderHelper = require('./common/render_helpers');
 
 //静态文件目录
 var staticDir = path.join(__dirname, 'public');
@@ -98,11 +99,12 @@ if (!config.debug) {
 _.extend(app.locals, {
     config: config,
     Loader: Loader,
-    assets: assets
+    assets: assets,
+	CMTypes:[]
 });
 
-//_.extend(app.locals, require('./common/render_helpers'));
 app.use(function (req, res, next) {
+	renderHelper.getEduTypes(app);
     res.locals.csrf = req.csrfToken ? req.csrfToken() : '';
     next();
 });
