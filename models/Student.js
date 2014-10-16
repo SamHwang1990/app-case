@@ -9,7 +9,7 @@ var StudentSchema = new Schema({
     name_en:{type:String},
     email:{type:String},
 
-    profile_image: {type: String},      //个人照片
+	profile_image: {type: String},      //个人照片
     resume_image:{type:String},         //申请摘要图片
 
     sort_content:{type:[]},             //分类信息列表

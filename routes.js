@@ -14,6 +14,10 @@ module.exports = function(app,express){
     // home page
     app.get('/', site.index);
 	app.get('/EduType/:typeId', site.showEduType);
+	app.get('/EduType/Option/StudentList/:typeId/:optionId/:page?',site.showOptionStudentList);
+
+	app.get('/StudentInfo/CaseResume/:studentId',site.showStudentResume);
+	app.get('/StudentInfo/EssayList/:studentId',site.showStudentEssayList);
 
     //student list page
     app.get('/list',site.list);

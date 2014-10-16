@@ -120,3 +120,7 @@ exports.updateStudentEssayItem = function(studentId,essayId,essayTitle,essayCont
 		callback
 	)
 };
+
+exports.getStudentCountBySort = function(sort_content,callback){
+	Student.count({'sort_content':sort_content},callback);
+};

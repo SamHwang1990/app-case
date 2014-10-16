@@ -60,30 +60,76 @@ exports.showOptionStudentList = function(req,res,next){
 	var typeId = req.params.typeId;
 	var optionId = req.params.optionId;
 	var listPage = req.params.page;
+	var studentPerPage = 8;
 
 	if(listPage === null || listPage === '' || !validator.isInt(listPage))
 		listPage = 1;
 	else
 		listPage = parseInt(listPage);
 
-	Student.getStudentsByQuery({
-		'sort_content':optionId
-	},{
-		skip:(listPage-1) * 8,
-		limit:8
-	},function(err, students){
-		if(err)
-			next(err);
-		return res.render('frontend/index',{
+	var ep = new eventproxy();
+	ep.fail(next);
+	ep.all('get_studentCount','get_currentStudentList',function(total,students){
+		return res.render('frontend/studentList',{
 			success:req.flash('success'),
 			topic:{
 				title:config.description
 			},
 			Students:students,
 			EduTypeId:typeId,
-			CurrentPage:listPage
+			SortOptionId:optionId,
+			CurrentPage:listPage,
+			IsFirstPage:listPage == 1,
+			IsLastPage:((listPage-1)*studentPerPage + students.length) >= total
 		});
-	})
+	});
+
+	Student.getStudentsByQuery({'sort_content':optionId},{sort:{'last_edit_date':-1},skip:(listPage-1) * studentPerPage,limit:studentPerPage},ep.done('get_currentStudentList'));
+	Student.getStudentCountBySort(optionId,ep.done('get_studentCount'));
+};
+
+exports.showStudentResume = function(req,res,next){
+	var studentId = req.params.studentId;
+
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		return res.render('frontend/studentResume',{
+			success:req.flash('success'),
+			topic:{
+				title:config.description
+			},
+			studentId:studentId,
+			name:student.name,
+			name_en:student.name_en,
+			eduTypeId:student.edu_type,
+			essayList:student.essay_list,
+			remark:student.remark,
+			resumeImg:student.resume_image
+		});
+	});
+};
+exports.showStudentEssayList = function(req,res,next){
+	var studentId = req.params.studentId;
+
+	Student.getStudentById(studentId,function(err,student){
+		if(err)
+			return next(err);
+
+		return res.render('frontend/studentEssayList',{
+			success:req.flash('success'),
+			topic:{
+				title:config.description
+			},
+			studentId:studentId,
+			name:student.name,
+			name_en:student.name_en,
+			eduTypeId:student.edu_type,
+			essayList:student.essay_list,
+			remark:student.remark
+		});
+	});
 };
 
 exports.list = function(req,res,next){

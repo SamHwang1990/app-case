@@ -1,0 +1,52 @@
+<div id="ac_v_resume_wrap">
+    <div class="ac_jumbotron ac_resume_jumbotron">
+        <div class="container">
+            <h1><%= name %></h1>
+            <p><%= remark %></p>
+        </div>
+    </div>
+    <div class="resume_img container-fluid text-center">
+        <% if(typeof(resumeImg) === 'undefined' || resumeImg === ''){ %>
+        <div class="container">
+            <div class="ac_callout ac_callout_danger">
+                <p>还没上传该学生的案例简介！</p>
+            </div>
+        </div>
+        <% }else{ %>
+        <img class="img-rounded" src="<%= resumeImg %>" alt="<%= name %>的案例简介">
+        <% } %>
+    </div>
+    <div class="clearfix"></div>
+    <% if(essayList.length <=0 ){ %>
+    <div class="container">
+        <div class="ac_callout ac_callout_warning">
+            <p>还没添加该学生的文书信息！</p>
+        </div>
+    </div>
+    <% }else{ %>
+    <div class="resume_list">
+        <div class="container">
+            <h2 id="EEssayList">Essay List</h2>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <% for(var i=0; i< essayList.length; i++){ %>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <span class="badge">#<%= i +1 %></span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#<%= essayList[i]._id %>" aria-expanded="true" aria-controls="collapseOne">
+                                <%= essayList[i].title %>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="<%= essayList[i]._id %>" class="panel-collapse collapse <%- i==0?'in':'' %>" role="tabpanel">
+                        <div class="panel-body">
+                            <%- essayList[i].content %>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
