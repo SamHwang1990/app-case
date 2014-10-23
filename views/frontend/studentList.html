@@ -1,10 +1,7 @@
 <div id="ac_v_list_wrap">
     <div class="container">
         <div id="ac_v_breadcrumb">
-            <p class="breadcrumb_tip">返回上级：</p>
-            <ol class="breadcrumb">
-                <li><a href="/EduType/<%= EduTypeId %>"><span class="glyphicon glyphicon-arrow-left"></span> </a></li>
-            </ol>
+            <p class="breadcrumb_tip">返回上级：<a href="/EduType/<%= EduTypeId %>"><span class="glyphicon glyphicon-arrow-left"></span> </a></p>
         </div>
         <div class="ac_v_list_body">
             <div class="row">
@@ -22,9 +19,9 @@
                         <img src="<%= student.profile_image %>" alt="<%= student.name %>">
                         <% } %>
                         <div class="caption">
-                            <h3><%= student.name %><small><%= student.name_en %></small></h3>
-                            <p style="max-height:20px;overflow:hidden;text-overflow:ellipsis"><%= student.remark %></p>
-                            <p>
+                            <h3 style="margin-top: 0px;margin-bottom: 5px"><%= student.name %><small><%= student.name_en %></small></h3>
+                            <p style="margin-bottom:5px;max-height:20px;overflow:hidden;text-overflow:ellipsis"><%= student.remark %></p>
+                            <p style="margin-bottom: 0">
                                 <a href="/StudentInfo/CaseResume/<%= student._id %>" class="btn btn-primary btn-sm" role="button">查看案例</a>
                                 <a href="/StudentInfo/CaseResume/<%= student._id %>/#EEssayList" class="btn btn-default btn-sm" role="button">文书列表</a>
                             </p>
@@ -35,7 +32,7 @@
             </div>
         </div>
         <div class="container text-center">
-            <ul class="pager">
+            <ul class="pager" style="margin-top: 0; margin-bottom: 0">
                 <% if(IsFirstPage){ %>
                 <li class="disabled"><a>上一页</a></li>
                 <% }else{ %>
