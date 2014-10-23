@@ -5,43 +5,32 @@
     </div>
 </div>
 <div id="ac_index_content">
-    <% if(Details === null || Details.length <= 0){ %>
+    <% if(Items === null || Items.length <= 0){ %>
     <div class="ac_sortItem">
         <div class="container">
         <p>当前留学类型下无分类信息，请先<a href="/backend/SortMgr/EditDetails/<%= CurrentType._id %>">添加</a>！</p>
         </div>
     </div>
     <% } else { %>
-
-        <% Details.forEach(function(detail){ %>
         <div class="ac_sortItem">
             <div class="container">
+                <h2 style="margin-top: 0;">留学类型筛选类型：</h2>
                 <div class="row">
-                    <div class="col-sm-3">
-                        <h3>
-                            <%= detail.EduTypeItem.name %>
-                            <span><%= detail.EduTypeItem.description %></span>
-                        </h3>
-                    </div>
-                    <div class="col-sm-9 row">
-                        <% detail.EduTypeItemOptions.forEach(function(option){ %>
-                        <div class="col-sm-6">
-                            <section class="cell-row">
-                                <section class="cell-row-col cell-row-description">
-                                    <%= option.name %>
-                                </section>
-                                <div class="cell-row-right-arrow">
-                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                </div>
-                                <a href="/EduType/Option/StudentList/<%= CurrentType._id %>/<%= option._id %>/" class="link-target"></a>
+                    <% Items.forEach(function(item){ %>
+                    <div class="col-sm-4">
+                        <section class="cell-row">
+                            <section class="cell-row-col cell-row-description">
+                                <%= item.name %>
                             </section>
-                        </div>
-                        <% }) %>
+                            <div class="cell-row-right-arrow">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </div>
+                            <a href="/EduType/ItemOptions/<%= CurrentType._id %>/<%= item._id %>/" class="link-target"></a>
+                        </section>
                     </div>
+                    <% }) %>
                 </div>
             </div>
         </div>
-        <% }) %>
-
     <% } %>
 </div>

@@ -1,0 +1,47 @@
+<div class="ac_jumbotron ac_index_jumbotron">
+    <div class="container">
+        <h1><%= CurrentType.name %></h1>
+        <p><%= CurrentType.description %></p>
+    </div>
+</div>
+<div id="ac_index_content">
+    <% if(Details === null || Details.length <= 0){ %>
+    <div class="ac_sortItem">
+        <div class="container">
+        <p>当前留学类型下无分类信息，请先<a href="/backend/SortMgr/EditDetails/<%= CurrentType._id %>">添加</a>！</p>
+        </div>
+    </div>
+    <% } else { %>
+
+        <% Details.forEach(function(detail){ %>
+        <div class="ac_sortItem">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h3>
+                            <%= detail.EduTypeItem.name %>
+                            <span><%= detail.EduTypeItem.description %></span>
+                        </h3>
+                    </div>
+                    <div class="col-sm-9 row">
+                        <% detail.EduTypeItemOptions.forEach(function(option){ %>
+                        <div class="col-sm-6">
+                            <section class="cell-row">
+                                <section class="cell-row-col cell-row-description">
+                                    <%= option.name %>
+                                </section>
+                                <div class="cell-row-right-arrow">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </div>
+                                <a href="/EduType/Option/StudentList/<%= CurrentType._id %>/<%= option._id %>/" class="link-target"></a>
+                            </section>
+                        </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+
+    <% } %>
+</div>

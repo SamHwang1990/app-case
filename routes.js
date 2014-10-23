@@ -14,6 +14,7 @@ module.exports = function(app,express){
     // home page
     app.get('/', site.index);
 	app.get('/EduType/:typeId', site.showEduType);
+	app.get('/EduType/ItemOptions/:typeId/:itemId', site.showEduTypeItemOptions);
 	app.get('/EduType/Option/StudentList/:typeId/:optionId/:page?',site.showOptionStudentList);
 
 	app.get('/StudentInfo/CaseResume/:studentId',site.showStudentResume);

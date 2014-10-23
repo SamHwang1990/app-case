@@ -21,18 +21,18 @@ exports.index = function(req,res,next){
 
 		var ep = new eventproxy();
 		ep.fail(next);
-		ep.all('get_firstDetail',function(details){
+		ep.all('get_firstItem',function(items){
 			return res.render('frontend/index',{
 				success:req.flash('success'),
 				topic:{
 					title:config.description
 				},
 				CurrentType:types[0],
-				Details:details
+				Items:items
 			});
 		});
 
-		Sort.getEduTypeDetails(types[0]._id,ep.done('get_firstDetail'));
+		Sort.getEduTypeItems(types[0]._id,ep.done('get_firstItem'));
 	});
 };
 
@@ -41,19 +41,41 @@ exports.showEduType = function(req,res,next){
 
 	var ep = new eventproxy();
 	ep.fail(next);
-	ep.all('get_typeDetail','get_currentType',function(details,currentType){
+	ep.all('get_typeItems','get_currentType',function(items,currentType){
 		return res.render('frontend/index',{
 			success:req.flash('success'),
 			topic:{
 				title:config.description
 			},
 			CurrentType:currentType,
-			Details:details
+			Items:items
 		});
 	});
 
-	Sort.getEduTypeDetails(typeId,ep.done('get_typeDetail'));
+	Sort.getEduTypeItems(typeId,ep.done('get_typeItems'));
 	Sort.getSortById(typeId,ep.done('get_currentType'));
+};
+
+exports.showEduTypeItemOptions = function(req,res,next){
+	var typeId = req.params.typeId;
+	var itemId = req.params.itemId;
+
+	var ep = new eventproxy();
+	ep.fail(next);
+	ep.all('get_typeItemOptions','get_currentTypeItem',function(options,item){
+		res.render('frontend/itemOptions',{
+			success:req.flash('success'),
+			topic:{
+				title:config.description
+			},
+			CurrentType:typeId,
+			Options:options,
+			Item:item
+		});
+	});
+
+	Sort.getEduTypeItemOptions(itemId,ep.done('get_typeItemOptions'));
+	Sort.getSortById(itemId,ep.done('get_currentTypeItem'));
 };
 
 exports.showOptionStudentList = function(req,res,next){
@@ -131,6 +153,8 @@ exports.showStudentEssayList = function(req,res,next){
 		});
 	});
 };
+
+
 
 exports.list = function(req,res,next){
     res.render('list',{

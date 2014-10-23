@@ -1,0 +1,36 @@
+<div class="ac_jumbotron ac_index_jumbotron">
+    <div class="container">
+        <h1><%= Item.name %></h1>
+        <p><%= Item.description %></p>
+    </div>
+</div>
+<div id="ac_index_content">
+    <% if(Options === null || Options.length <= 0){ %>
+    <div class="ac_sortItem">
+        <div class="container">
+            <p>当前筛选分类下无选项信息，请先<a href="/backend/SortMgr/EditDetails/<%= CurrentType %>">添加</a>！</p>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="ac_sortItem">
+        <div class="container">
+            <h2 style="margin-top: 0;">筛选分类的选项：</h2>
+            <div class="row">
+                <% Options.forEach(function(option){ %>
+                <div class="col-sm-4">
+                    <section class="cell-row">
+                        <section class="cell-row-col cell-row-description">
+                            <%= option.name %>
+                        </section>
+                        <div class="cell-row-right-arrow">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </div>
+                        <a href="/EduType/Option/StudentList/<%= CurrentType %>/<%= option._id %>/" class="link-target"></a>
+                    </section>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
