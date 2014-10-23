@@ -67,17 +67,6 @@
             <h4>上传案例照片</h4>
         </div>
     </div>
-    <div class="help-block">
-        <div class="imageBox">
-            <div class="thumbBox"></div>
-            <div class="spinner" style="display: none">Loading...</div>
-        </div>
-        <div class="cropped">
-            <% if(Student.resume_image !== null && typeof(Student.resume_image) !== 'undefined' && Student.resume_image !== ''){ %>
-            <img src="<%= Student.resume_image %>" />
-            <% } %>
-        </div>
-    </div>
     <div class="container">
         <form method="post">
             <div class="form-group">
@@ -107,6 +96,18 @@
             <button type="submit" class="btn btn-primary btn-lg">提交</button>
         </form>
     </div>
+    <div class="help-block">
+        <div class="imageBox">
+            <div class="thumbBox"></div>
+            <div class="spinner" style="display: none">Loading...</div>
+        </div>
+        <div class="cropped">
+            <% if(Student.resume_image !== null && typeof(Student.resume_image) !== 'undefined' && Student.resume_image !== ''){ %>
+            <img src="<%= Student.resume_image %>" />
+            <% } %>
+        </div>
+    </div>
+
 </div>
 
 <!-- js -->

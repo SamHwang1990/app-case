@@ -134,7 +134,7 @@ exports.getEduTypeItems = function(eduType_id,callback){
  * @param {Function} callback 回调函数
  */
 exports.getEduTypeItemOptions = function(item_id,callback){
-	Sort.find({parent_id:item_id, grade:2}, callback);
+	Sort.find({parent_id:item_id, grade:2},{},{sort:{name:-1}}, callback);
 };
 
 exports.getEduTypeDetails = function(eduType_id,callback){
