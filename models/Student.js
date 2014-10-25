@@ -6,8 +6,6 @@ var Schema = mongoose.Schema;
 
 var StudentSchema = new Schema({
     name:{type:String},
-    name_en:{type:String},
-    email:{type:String},
 
 	profile_image: {type: String},      //个人照片
     resume_image:{type:String},         //申请摘要图片
@@ -18,8 +16,6 @@ var StudentSchema = new Schema({
 	essay_list:{type:[{}]},             //文书列表
 
     remark:{type:String},
-
-    is_block:{type:Boolean, default:false},
 
 	create_date:{type:String, default:Date(), get:function(val){
 		return new Date(val);

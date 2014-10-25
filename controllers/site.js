@@ -124,7 +124,6 @@ exports.showStudentResume = function(req,res,next){
 			},
 			studentId:studentId,
 			name:student.name,
-			name_en:student.name_en,
 			eduTypeId:student.edu_type,
 			essayList:student.essay_list,
 			remark:student.remark,
@@ -146,7 +145,6 @@ exports.showStudentEssayList = function(req,res,next){
 			},
 			studentId:studentId,
 			name:student.name,
-			name_en:student.name_en,
 			eduTypeId:student.edu_type,
 			essayList:student.essay_list,
 			remark:student.remark

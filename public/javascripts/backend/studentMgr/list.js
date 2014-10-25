@@ -38,26 +38,6 @@ $(function(){
 			valign: 'middle',
 			sortable: true
 		}, {
-			field: 'name_en',
-			title: '英文',
-			align: 'left',
-			halign: 'left',
-			valign: 'middle',
-			sortable: true
-		}, {
-			field: 'email',
-			title: 'Email',
-			align: 'left',
-			halign: 'left',
-			valign: 'middle'
-		},{
-			field: 'EduType',
-			title: '留学类型',
-			align: 'left',
-			halign: 'left',
-			valign: 'middle',
-			sortable: true
-		}, {
 			field: 'create_date',
 			title: '创建时间',
 			align: 'left',
@@ -71,18 +51,6 @@ $(function(){
 			halign: 'left',
 			valign: 'middle',
 			sortable: true
-		},{
-			field:'is_block',
-			title:'状态',
-			align:'left',
-			halign:'left',
-			valign:'middle',
-			formatter:function(value){
-				if(value !== true)
-					return '正常';
-				else
-					return '禁用';
-			}
 		},{
 			field: '_id',
 			title: '操作',

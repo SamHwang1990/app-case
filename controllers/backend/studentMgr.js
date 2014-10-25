@@ -61,15 +61,8 @@ exports.showNew = function(req,res,next){
 exports.newStudent = function(req,res,next){
 	var name = validator.trim(req.body.name);
 	name = sanitizer.sanitize(name);
-	var name_en = validator.trim(req.body.name_en);
-	name_en = sanitizer.sanitize(name_en);
-	var email = validator.trim(req.body.email);
-	email = email.toLowerCase();
-	email = sanitizer.sanitize(email);
 	var remark = validator.trim(req.body.remark);
 	remark = sanitizer.sanitize(remark);
-	var is_block = validator.trim(req.body.is_block);
-	is_block = is_block === 'on'?true:false;
 	var profileImg = validator.trim(req.body.profileImg);
 	profileImg = sanitizer.sanitize(profileImg);
 
@@ -83,54 +76,17 @@ exports.newStudent = function(req,res,next){
 			name: name, email: email, name_en:name_en, remark:remark, is_block:is_block,profileImg:profileImg});
 	};
 
-	if (name === '' || name_en === '' ||  email === '') {
-		req.flash('error','信息不完整。');
-		error_render(req,res);
-		return;
-	}
-
-	if(!validator.isEmail(email)){
-		req.flash('error','不正确的电子邮箱。');
-		error_render(req,res);
-		return;
-	}
-
 	if (name.length < 1) {
 		req.flash('error','学生名至少需要1个字符。');
 		error_render(req,res);
 		return;
 	}
 
-	if (name_en.length < 1) {
-		req.flash('error','学生英文名至少需要1个字符。');
-		error_render(req,res);
-		return;
-	}
-
-	if(!validator.isAlphanumeric(name_en)){
-		req.flash('error','学生英文名只能使用0-9，a-z，A-Z。');
-		error_render(req,res);
-		return;
-	}
-
-	//检测Email 是否已存在
-	Student.getStudentByMail(email,function(err,student){
+	Student.newAndSave(name,remark,profileImg,function(err, student){
 		if(err)
 			return next(err);
 
-		if(student !== null){
-			req.flash('error','邮箱名已被占用。');
-			error_render(req,res);
-			return;
-		}
-
-		Student.newAndSave(name,name_en,email,is_block,remark,profileImg,function(err, student){
-			if(err)
-				return next(err);
-
-			return res.redirect('/backend/StudentMgr/List');
-			//res.redirect('/backend/StudentMgr/SortMgr/' + student._id);
-		});
+		return res.redirect('/backend/StudentMgr/List');
 	});
 };
 /*
@@ -149,10 +105,7 @@ exports.showEdit = function(req,res,next){
 				title:'编辑学生信息 - 学生管理 - 后台管理 - ' + config.description
 			},
 			name:student.name,
-			name_en:student.name_en,
-			email:student.email,
 			remark:student.remark,
-			is_block:student.is_block,
 			profileImg:student.profile_image
 		})
 	});
@@ -165,15 +118,8 @@ exports.editStudent = function(req,res,next){
 
 	var name = validator.trim(req.body.name);
 	name = sanitizer.sanitize(name);
-	var name_en = validator.trim(req.body.name_en);
-	name_en = sanitizer.sanitize(name_en);
-	var email = validator.trim(req.body.email);
-	email = email.toLowerCase();
-	email = sanitizer.sanitize(email);
 	var remark = validator.trim(req.body.remark);
 	remark = sanitizer.sanitize(remark);
-	var is_block = validator.trim(req.body.is_block);
-	is_block = is_block === 'on'?true:false;
 	var profileImg = validator.trim(req.body.profileImg);
 	profileImg = sanitizer.sanitize(profileImg);
 
@@ -187,32 +133,8 @@ exports.editStudent = function(req,res,next){
 			name: name, email: email, name_en:name_en, remark:remark, is_block:is_block,profileImg:profileImg});
 	};
 
-	if (name === '' || name_en === '' ||  email === '') {
-		req.flash('error','信息不完整。');
-		error_render(req,res);
-		return;
-	}
-
-	if(!validator.isEmail(email)){
-		req.flash('error','不正确的电子邮箱。');
-		error_render(req,res);
-		return;
-	}
-
 	if (name.length < 1) {
 		req.flash('error','学生名至少需要1个字符。');
-		error_render(req,res);
-		return;
-	}
-
-	if (name_en.length < 1) {
-		req.flash('error','学生英文名至少需要1个字符。');
-		error_render(req,res);
-		return;
-	}
-
-	if(!validator.isAlphanumeric(name_en)){
-		req.flash('error','学生英文名只能使用0-9，a-z，A-Z。');
 		error_render(req,res);
 		return;
 	}
@@ -227,43 +149,17 @@ exports.editStudent = function(req,res,next){
 			error_render(req,res);
 			return;
 		}
+		student.name = name;
+		student.remark = remark;
+		student.profile_image = profileImg;
+		student.last_edit_date = Date();
 
-
-		/*
-		* 查询是否存在一条记录，id 不是学生的id，email 地址与请求中的email 地址一样
-		* 如果有，则表示邮箱地址重复，报错！
-		* 否则，可以保存email
-		* */
-		Student.getStudentsByQuery({
-			'_id':{$ne:studentId},
-			'email':email
-		},{},function(err,students){
+		student.save(function(err){
 			if(err)
 				return next(err);
 
-			if(students.length > 0){
-				req.flash('error','邮箱名已被占用。');
-				error_render(req,res);
-				return;
-			}
-
-			student.name = name;
-			student.name_en = name_en;
-			student.email = email;
-			student.remark = remark;
-			student.profile_image = profileImg;
-			student.is_block = is_block;
-			student.last_edit_date = Date();
-
-			student.save(function(err){
-				if(err)
-					return next(err);
-
-				return res.redirect('/backend/StudentMgr/List');
-				//res.redirect('/backend/StudentMgr/SortMgr/' + student._id);
-			})
+			return res.redirect('/backend/StudentMgr/List');
 		})
-
 	});
 };
 /*

@@ -47,30 +47,6 @@ exports.getStudentById = function (id, callback) {
 };
 
 /**
- * 根据英文名，查找学生
- * Callback:
- * - err, 数据库异常
- * - student, 学生
- * @param {String} nameEn 学生名
- * @param {Function} callback 回调函数
- */
-exports.getStudentByNameEn = function (nameEn, callback) {
-	Student.findOne({name_en: nameEn}, callback);
-};
-
-/**
- * 根据邮箱，查找学生
- * Callback:
- * - err, 数据库异常
- * - student, 学生
- * @param {String} email 邮箱地址
- * @param {Function} callback 回调函数
- */
-exports.getStudentByMail = function (email, callback) {
-	Student.findOne({email: email}, callback);
-};
-
-/**
  * 根据关键字，获取一组学生
  * Callback:
  * - err, 数据库异常
@@ -83,12 +59,9 @@ exports.getStudentsByQuery = function (query, opt, callback) {
 	Student.find(query, {}, opt, callback);
 };
 
-exports.newAndSave = function (name, name_en, email, is_block, remark, profileImg, callback) {
+exports.newAndSave = function (name, remark, profileImg, callback) {
 	var student = new Student();
 	student.name = name;
-	student.name_en = name_en;
-	student.email = email;
-	student.is_block = is_block;
 	student.remark = remark;
 	student.profile_image = profileImg;
 	student.create_date = Date();

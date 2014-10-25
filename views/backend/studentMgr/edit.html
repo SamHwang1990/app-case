@@ -60,39 +60,12 @@
             </h2>
             <form role="form" method="post">
                 <div class="form-group">
-
-                    <label for="email" class="sr-only">学生邮箱</label>
-                    <% if(typeof(email) !== 'undefined'){ %>
-                    <input type="email" class="form-control" name="email" placeholder="请输入学生邮箱" value="<%= email %>">
-                    <% } else { %>
-                    <input type="email" class="form-control" name="email" placeholder="请输入学生邮箱">
-                    <% } %>
-                </div>
-                <div class="form-group">
                     <label for="name" class="sr-only">中文名</label>
                     <% if(typeof(name) !== 'undefined'){ %>
                     <input type="text" class="form-control" name="name" placeholder="中文名" value="<%= name %>">
                     <% }else { %>
                     <input type="text" class="form-control" name="name" placeholder="中文名">
                     <% } %>
-                </div>
-                <div class="form-group">
-                    <label for="name_en" class="sr-only">英文名</label>
-                    <% if(typeof(name_en) !== 'undefined'){ %>
-                    <input type="text" class="form-control" name="name_en" placeholder="英文名" value="<%= name_en %>">
-                    <% }else { %>
-                    <input type="text" class="form-control" name="name_en" placeholder="英文名">
-                    <% } %>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <% if(typeof(is_block) !== 'undefined' && is_block == true) { %>
-                        <input type="checkbox" name="is_block" checked >
-                        <% } else { %>
-                        <input type="checkbox" name="is_block">
-                        <% } %>
-                        是否禁用
-                    </label>
                 </div>
                 <div class="form-group">
                     <label for="remark" class="sr-only">学生备注</label>
