@@ -26,7 +26,5 @@ var StudentSchema = new Schema({
 });
 
 StudentSchema.index({name:1});
-StudentSchema.index({name_en:1});
-StudentSchema.index({email:1}, {unique:true});
 
 mongoose.model('Student', StudentSchema);

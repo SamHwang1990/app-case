@@ -73,7 +73,7 @@ exports.newStudent = function(req,res,next){
 			topic:{
 				title:'添加学生 - 学生管理 - 后台管理 - ' + config.description
 			},
-			name: name, email: email, name_en:name_en, remark:remark, is_block:is_block,profileImg:profileImg});
+			name: name, remark:remark, profileImg:profileImg});
 	};
 
 	if (name.length < 1) {
@@ -130,7 +130,7 @@ exports.editStudent = function(req,res,next){
 			topic:{
 				title:'编辑学生信息 - 学生管理 - 后台管理 - ' + config.description
 			},
-			name: name, email: email, name_en:name_en, remark:remark, is_block:is_block,profileImg:profileImg});
+			name: name,remark:remark,profileImg:profileImg});
 	};
 
 	if (name.length < 1) {
