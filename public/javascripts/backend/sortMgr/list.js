@@ -6,7 +6,6 @@
 	var buildTabContent = function($wrapEl, detailsData){
 		var outputHtml = '';
 		var message = '';
-		console.log(JSON.stringify(detailsData));
 		_.forEach(detailsData, function(detailValue){
 			var detailItem = detailValue.EduTypeItem;
 			var detailItemOptions = detailValue.EduTypeItemOptions;

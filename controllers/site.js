@@ -19,6 +19,17 @@ exports.index = function(req,res,next){
 		if(err)
 			return next(err);
 
+		if(types.length === 0){
+			return res.render('frontend/index',{
+				success:req.flash('success'),
+				topic:{
+					title:config.description
+				},
+				CurrentType:[],
+				Items:[]
+			});
+		}
+
 		var ep = new eventproxy();
 		ep.fail(next);
 		ep.all('get_firstItem',function(items){
